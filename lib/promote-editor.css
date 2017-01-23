@@ -1,0 +1,47 @@
+.ql-snow .ql-picker.ql-header {
+    border: 1px solid #ccc;
+}
+
+.ql-editor {
+    height: 400px;
+}
+
+.disabled button {
+    color: #ccc;
+}
+
+.disabled .ql-stroke, button:hover.disabled .ql-stroke {
+    stroke: #ccc!important;
+}
+
+.disabled button:hover, button:hover.disabled, .disabled .ql-picker-label {
+    cursor: default;
+}
+
+.disabled .ql-fill, .disabled .ql-stroke.ql-fill, .disabled button:hover .ql-stroke.ql-fill, button:hover.disabled .ql-stroke.ql-fill {
+    fill: #ccc!important;
+}
+
+.disabled .ql-picker-label, .disabled .ql-picker-label.ql-active {
+    color: #ccc!important;
+}
+
+.disabled .ql-showcode .ql-fill, .disabled .ql-showcode .ql-stroke.ql-fill {
+    fill: #333!important;
+}
+
+.disabled .ql-showcode .ql-stroke {
+    stroke: #333!important;
+}
+
+.disabled button:hover.ql-showcode {
+    cursor: pointer;
+}
+
+.disabled button:hover.ql-showcode .ql-stroke.ql-fill {
+    fill: #06c!important;
+}
+
+.disabled button:hover.ql-showcode .ql-stroke {
+    stroke: #06c!important;
+}
