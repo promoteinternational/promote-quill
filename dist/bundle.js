@@ -70,15 +70,15 @@
 
 	var _pretty2 = _interopRequireDefault(_pretty);
 
-	var _utils = __webpack_require__(20);
+	var _utils = __webpack_require__(14);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	// Add default quill css
-	__webpack_require__(14);
+	__webpack_require__(15);
 
 	// Add custom promote editor css
-	__webpack_require__(18);
+	__webpack_require__(19);
 
 	var icons = _quill2.default.import('ui/icons');
 
@@ -94,17 +94,18 @@
 	  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
 	  var os = "win";
+	  var editorId = parseInt(Math.random() * 10000);
 
 	  if (/Linux/i.test(navigator.platform)) os = "lin";
 	  if (/Mac/i.test(navigator.platform)) os = "mac";
 
 	  // Add element for creating editor in
 	  var editorElement = document.createElement('div');
-	  editorElement.id = "editor-container";
+	  editorElement.id = "editor-container-" + editorId;
 	  textarea.parentNode.insertBefore(editorElement, textarea);
 
 	  var toolbarElement = document.createElement('div');
-	  toolbarElement.id = "toolbar-container";
+	  toolbarElement.id = "toolbar-container-" + editorId;
 	  textarea.parentNode.insertBefore(toolbarElement, editorElement);
 
 	  // Make sure textarea is not visible
@@ -134,20 +135,20 @@
 	  // Add header dropdown
 	  '<span class="ql-formats">' + (0, _utils.addSelect)(options, "header", [1, 2, 3, 4, 5, 6, null]) + '</span>' +
 	  // Add list buttons
-	  '<span class="ql-formats">' + (0, _utils.addButton)(options, "list", "ordered") + (0, _utils.addButton)(options, "list", "bullet") + (0, _utils.addButton)(options, "blockquote") + '</span>' +
+	  '<span class="ql-formats">' + (0, _utils.addButton)(options, "list", { value: "ordered" }) + (0, _utils.addButton)(options, "list", { value: "bullet" }) + (0, _utils.addButton)(options, "blockquote") + '</span>' +
 	  // Add alignment button
 	  '<span class="ql-formats">' + (0, _utils.addSelect)(options, "align", [null, 'center', 'right']) + '</span>' +
 	  // Add image, pictures and hr tags
 	  '<span class="ql-formats">' + (0, _utils.addButton)(options, "image") + (0, _utils.addButton)(options, "video") + (0, _utils.addButton)(options, "divider") + '</span>' +
 	  // Add undo / redo / clean buttons
-	  '<span class="ql-formats">' + (0, _utils.addButton)(options, "undo") + (0, _utils.addButton)(options, "redo") + (0, _utils.addButton)(options, "clean") + '</span>' +
+	  '<span class="ql-formats">' + (0, _utils.addButton)(options, "undo", { disabled: true }) + (0, _utils.addButton)(options, "redo", { disabled: true }) + (0, _utils.addButton)(options, "clean") + '</span>' +
 	  // Add show code button
 	  '<span class="ql-formats">' + (0, _utils.addButton)(options, "showcode") + '</span>';
 
 	  // Add our default toolbar
 	  options.modules = options.modules || {};
 	  options.modules.toolbar = options.modules.toolbar || {};
-	  options.modules.toolbar.container = options.modules.toolbar.container || "#toolbar-container";
+	  options.modules.toolbar.container = options.modules.toolbar.container || "#" + toolbarElement.id;
 
 	  // Add the toolbar module handlers
 	  options.modules.toolbar.handlers = options.modules.toolbar.handlers || {
@@ -179,20 +180,23 @@
 	      }
 	    },
 	    showcode: function showcode() {
+	      var editorContainer = this.quill.container;
+
 	      if (textarea.style.display == 'none') {
-	        var editorHtml = editorElement.childNodes[0].innerHTML;
-	        textarea.style.width = editorElement.clientWidth + "px";
-	        textarea.style.height = editorElement.clientHeight + "px";
-	        editorElement.style.display = 'none';
+	        var qlEditorElement = editorContainer.getElementsByClassName('ql-editor')[0];
+	        var editorHtml = qlEditorElement.innerHTML;
+	        textarea.style.width = qlEditorElement.clientWidth + "px";
+	        textarea.style.height = qlEditorElement.clientHeight + "px";
+	        editorContainer.style.display = 'none';
 	        textarea.style.display = 'block';
 	        this.container.classList.add("disabled");
 	        this.quill.disable();
-	        textarea.innerHTML = (0, _pretty2.default)(editorHtml);
+	        textarea.value = (0, _pretty2.default)(editorHtml);
 	      } else {
+	        (0, _utils.updateEditorContents)(editor, textarea);
 	        this.quill.enable();
 	        textarea.style.display = 'none';
-	        editorElement.style.display = 'block';
-	        (0, _utils.updateEditorContents)(editor, textarea);
+	        editorContainer.style.display = 'block';
 	        this.container.classList.remove("disabled");
 	      }
 	    }
@@ -213,17 +217,16 @@
 	  // Add custom handlers for custom buttons
 	  var toolbar = editor.getModule('toolbar');
 
-	  var undo_btn = toolbar.container.getElementsByClassName("ql-undo")[0],
-	      redo_btn = toolbar.container.getElementsByClassName("ql-redo")[0];
-
-	  undo_btn.classList.add("disabled");
-	  redo_btn.classList.add("disabled");
+	  var undo_btn = toolbar.container.getElementsByClassName("ql-undo")[0];
 
 	  // Sync all text changes to the textarea in the form
 	  editor.on(_quill2.default.events.EDITOR_CHANGE, function (eventName) {
-	    if (eventName === _quill2.default.events.TEXT_CHANGE) undo_btn.classList.remove("disabled");
+	    // Do not sync changes when the editor is disabled.
+	    if (editor.isEnabled()) {
+	      if (eventName === _quill2.default.events.TEXT_CHANGE) undo_btn.classList.remove("disabled");
 
-	    (0, _utils.updateHtml)(textarea, editorElement);
+	      (0, _utils.updateHtml)(textarea, editor.container.getElementsByClassName('ql-editor')[0]);
+	    }
 	  });
 
 	  return editor;
@@ -18049,15 +18052,75 @@
 
 /***/ },
 /* 14 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.updateEditorContents = updateEditorContents;
+	exports.addTooltip = addTooltip;
+	exports.addButton = addButton;
+	exports.addSelect = addSelect;
+	exports.updateHtml = updateHtml;
+	function updateEditorContents(editor, textarea) {
+	  editor.clipboard.dangerouslyPasteHTML(textarea.value);
+	}
+
+	function addTooltip(options, name, defaultString, os, defaultKeyBinding, macKeyBinding, winKeyBinding) {
+	  var returnString = options.tooltips[name] || defaultString;
+
+	  if (os) {
+	    var keyBinding = defaultKeyBinding;
+	    if (os == 'mac') keyBinding = macKeyBinding;
+
+	    if (os == 'win' && winKeyBinding) keyBinding = winKeyBinding;
+
+	    returnString += " " + keyBinding;
+	  }
+
+	  return returnString;
+	}
+
+	function addButton(options, name) {
+	  var button_options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+	  var tooltip_name = name + (button_options.value ? "_" + button_options.value : "");
+
+	  return '<button class="ql-' + name + (button_options.disabled ? ' disabled' : '') + '" type="button" title="' + options.tooltips[tooltip_name] + '"' + (button_options.value ? ' value="' + button_options.value + '"' : '') + '></button>';
+	}
+
+	function addSelect(options, name, select_options) {
+	  var html = '<select class="ql-' + name + '" title="' + options.tooltips[name] + '">';
+	  for (var i = 0; i < select_options.length; i++) {
+	    var option = select_options[i];
+	    if (select_options[i]) html += '<option value="' + select_options[i] + '"></option>';else html += '<option selected></option>';
+	  }
+	  html += '</select>';
+
+	  return html;
+	}
+
+	function updateHtml(textarea, editorContainer) {
+	  var evt = document.createEvent("HTMLEvents");
+
+	  textarea.value = editorContainer.innerHTML;
+	  evt.initEvent("change", false, true);
+	  textarea.dispatchEvent(evt);
+	}
+
+/***/ },
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(15);
+	var content = __webpack_require__(16);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(17)(content, {});
+	var update = __webpack_require__(18)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -18074,10 +18137,10 @@
 	}
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(16)();
+	exports = module.exports = __webpack_require__(17)();
 	// imports
 
 
@@ -18088,7 +18151,7 @@
 
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports) {
 
 	/*
@@ -18144,7 +18207,7 @@
 
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -18396,16 +18459,16 @@
 
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(19);
+	var content = __webpack_require__(20);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(17)(content, {});
+	var update = __webpack_require__(18)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -18422,10 +18485,10 @@
 	}
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(16)();
+	exports = module.exports = __webpack_require__(17)();
 	// imports
 
 
@@ -18434,65 +18497,6 @@
 
 	// exports
 
-
-/***/ },
-/* 20 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.updateEditorContents = updateEditorContents;
-	exports.addTooltip = addTooltip;
-	exports.addButton = addButton;
-	exports.addSelect = addSelect;
-	exports.updateHtml = updateHtml;
-	function updateEditorContents(editor, textarea) {
-	  editor.clipboard.dangerouslyPasteHTML(textarea.value);
-	}
-
-	function addTooltip(options, name, defaultString, os, defaultKeyBinding, macKeyBinding, winKeyBinding) {
-	  var returnString = options.tooltips[name] || defaultString;
-
-	  if (os) {
-	    var keyBinding = defaultKeyBinding;
-	    if (os == 'mac') keyBinding = macKeyBinding;
-
-	    if (os == 'win' && winKeyBinding) keyBinding = winKeyBinding;
-
-	    returnString += " " + keyBinding;
-	  }
-
-	  return returnString;
-	}
-
-	function addButton(options, name, value) {
-	  var tooltip_name = name;
-	  if (value) tooltip_name = tooltip_name + "_" + value;
-
-	  return '<button class="ql-' + name + '" type="button" title="' + options.tooltips[tooltip_name] + '"' + (value ? ' value="' + value + '"' : '') + '></button>';
-	}
-
-	function addSelect(options, name, select_options) {
-	  var html = '<select class="ql-' + name + '" title="' + options.tooltips[name] + '">';
-	  for (var i = 0; i < select_options.length; i++) {
-	    var option = select_options[i];
-	    if (select_options[i]) html += '<option value="' + select_options[i] + '"></option>';else html += '<option selected></option>';
-	  }
-	  html += '</select>';
-
-	  return html;
-	}
-
-	function updateHtml(textarea, editorElement) {
-	  var evt = document.createEvent("HTMLEvents");
-
-	  textarea.innerHTML = editorElement.childNodes[0].innerHTML;
-	  evt.initEvent("change", false, true);
-	  textarea.dispatchEvent(evt);
-	}
 
 /***/ }
 /******/ ]);
