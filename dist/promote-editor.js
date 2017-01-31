@@ -51,7 +51,7 @@
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -65,6 +65,10 @@
 	var _hr = __webpack_require__(8);
 
 	var _hr2 = _interopRequireDefault(_hr);
+
+	var _promote_video = __webpack_require__(21);
+
+	var _promote_video2 = _interopRequireDefault(_promote_video);
 
 	var _pretty = __webpack_require__(9);
 
@@ -89,6 +93,7 @@
 	icons['redo'] = '<svg viewbox="0 0 18 18"><polygon class="ql-fill ql-stroke" points="12 10 14 12 16 10 12 10"></polygon><path class="ql-stroke" d="M9.91,13.91A4.6,4.6,0,0,1,9,14a5,5,0,1,1,5-5"></path></svg>';
 
 	_quill2.default.register(_hr2.default);
+	_quill2.default.register(_promote_video2.default);
 
 	function makeEditor(textarea) {
 	  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
@@ -18498,6 +18503,65 @@
 
 	// exports
 
+
+/***/ },
+/* 21 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+	var _quill = __webpack_require__(2);
+
+	var _quill2 = _interopRequireDefault(_quill);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Video = _quill2.default.import('formats/video');
+
+	var PromoteVideo = function (_Video) {
+	  _inherits(PromoteVideo, _Video);
+
+	  function PromoteVideo() {
+	    _classCallCheck(this, PromoteVideo);
+
+	    return _possibleConstructorReturn(this, (PromoteVideo.__proto__ || Object.getPrototypeOf(PromoteVideo)).apply(this, arguments));
+	  }
+
+	  _createClass(PromoteVideo, null, [{
+	    key: 'create',
+	    value: function create(value) {
+	      var node = _get(PromoteVideo.__proto__ || Object.getPrototypeOf(PromoteVideo), 'create', this).call(this, value);
+	      node.setAttribute('frameborder', '0');
+	      node.setAttribute('allowfullscreen', true);
+	      node.setAttribute('src', this.sanitize(value));
+	      node.setAttribute('width', '500');
+	      node.setAttribute('height', '281');
+	      return node;
+	    }
+	  }]);
+
+	  return PromoteVideo;
+	}(Video);
+
+	PromoteVideo.blotName = 'video';
+	PromoteVideo.className = 'ql-video';
+	PromoteVideo.tagName = 'IFRAME';
+
+	exports.default = PromoteVideo;
 
 /***/ }
 /******/ ]);
