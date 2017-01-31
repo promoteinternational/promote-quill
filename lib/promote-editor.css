@@ -2,8 +2,12 @@
     border: 1px solid #ccc;
 }
 
+.ql-toolbar, .ql-container {
+    width: 1170px;
+}
+
 .ql-editor {
-    height: 400px;
+    min-height: 400px;
 }
 
 .disabled button {
