@@ -204,7 +204,7 @@
 	      var editorContainer = this.quill.container;
 
 	      if (textarea.style.display == 'none') {
-	        var qlEditorElement = editorContainer.getElementsByClassName('ql-editor')[0];
+	        var qlEditorElement = editorContainer.firstChild;
 	        var editorHtml = qlEditorElement.innerHTML;
 	        textarea.style.width = qlEditorElement.clientWidth + "px";
 	        textarea.style.height = qlEditorElement.clientHeight + "px";
