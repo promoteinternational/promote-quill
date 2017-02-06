@@ -13,15 +13,16 @@ module.exports = {
       {
         test: /\.js$/,
         loader: "babel-loader",
-        include: [
-          __dirname + "/lib",
-          __dirname + "/node_modules/quill"
-        ],
+        exclude: [ /node_modules(?!\/quill)/ ],
         query: { presets: ["es2015"] }
       },
       {
         test: /\.css$/,
         loader: "style-loader!css-loader"
+      },
+      {
+        test: /\.svg$/,
+        loader: 'svg-inline'
       }
     ]
   },
