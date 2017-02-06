@@ -16,7 +16,7 @@ Rich content editor based on [Quilljs](https://quilljs.com/).
 
 ## Bundling
 
-The bundled version is `dist/bundle.js`. To release a new version run:
+The bundled version is `dist/promote-editor.js`. To release a new version run:
 ```
 $ npm run dist
 ```
