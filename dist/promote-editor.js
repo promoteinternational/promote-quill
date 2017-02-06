@@ -225,7 +225,7 @@
 	  };
 
 	  // Make sure only our custom formats are used
-	  options.format = options.format || ['bold', 'italic', 'link', 'header', 'list', 'blockquote', 'align', 'video', 'divider'];
+	  options.formats = options.formats || ['bold', 'italic', 'link', 'header', 'list', 'blockquote', 'align', 'image', 'video', 'divider'];
 
 	  options.theme = 'snow';
 
