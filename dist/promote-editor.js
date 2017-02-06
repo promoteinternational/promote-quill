@@ -87,6 +87,7 @@
 	// Add custom promote editor css
 	__webpack_require__(22);
 
+	// Add custom hr tag and custom video settings
 	_quill2.default.register({
 	  'formats/video': _promote_video2.default,
 	  'formats/divider': _hr2.default
