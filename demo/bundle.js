@@ -1,1 +1,1 @@
-../dist/promote-editor.min.js
+../dist/promote-editor.js
