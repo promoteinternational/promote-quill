@@ -13,7 +13,6 @@ module.exports = {
       {
         test: /\.js$/,
         loader: "babel-loader",
-        exclude: [ /node_modules(?!\/quill)/ ],
         query: { presets: ["es2015"] }
       },
       {
@@ -27,8 +26,6 @@ module.exports = {
     ]
   },
   plugins: PROD ? [
-    new webpack.optimize.UglifyJsPlugin({
-      compress: { warnings: false }
-    })
+    new webpack.optimize.DedupePlugin()
   ] : []
 };
