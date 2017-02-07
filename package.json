@@ -20,6 +20,7 @@
   "homepage": "https://github.com/avidity/promote-editor#readme",
   "dependencies": {
     "html-beautify": "1.0.4",
+    "parchment": "1.0.8",
     "quill": "1.1.10"
   },
   "devDependencies": {
