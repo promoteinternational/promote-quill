@@ -332,6 +332,9 @@
 	  (0, _utils.updateEditorContents)(editor, textarea);
 	  editor.history.clear();
 
+	  // Set default text for link placeholder
+	  editorElement.getElementsByClassName("ql-tooltip")[0].getElementsByTagName('input')[0].setAttribute('data-link', "Embed link");
+
 	  // Add custom handlers for custom buttons
 	  var toolbar = editor.getModule('toolbar');
 
