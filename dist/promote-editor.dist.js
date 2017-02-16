@@ -166,10 +166,8 @@
 	  '<span class="ql-formats">' + (0, _utils.addSelect)(options, "align", [null, 'center', 'right']) + '</span>' +
 	  // Add image, pictures and hr tags
 	  '<span class="ql-formats">' + (0, _utils.addButton)(options, "video") + (0, _utils.addButton)(options, "divider") + '</span>' +
-	  // Add undo / redo / clean buttons
-	  '<span class="ql-formats">' + (0, _utils.addButton)(options, "undo", { disabled: true }) + (0, _utils.addButton)(options, "redo", { disabled: true }) + (0, _utils.addButton)(options, "clean") + '</span>' +
-	  // Add show code button
-	  '<span class="ql-formats">' + (0, _utils.addButton)(options, "showcode") + '</span>';
+	  // Add undo / redo / clean / showcode buttons
+	  '<span class="ql-formats">' + (0, _utils.addButton)(options, "undo", { disabled: true }) + (0, _utils.addButton)(options, "redo", { disabled: true }) + (0, _utils.addButton)(options, "clean") + (0, _utils.addButton)(options, "showcode") + '</span>';
 
 	  // Add our default toolbar
 	  options.modules = options.modules || {};
