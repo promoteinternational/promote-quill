@@ -7,7 +7,7 @@ module.exports = {
   entry: ["./lib/index"],
   output: {
     path: __dirname + "/dist",
-    filename: PROD ? 'promote-editor.min.js' : 'promote-editor.js'
+    filename: PROD ? 'promote-editor.dist.js' : 'promote-editor.js'
   },
   module: {
     loaders: [

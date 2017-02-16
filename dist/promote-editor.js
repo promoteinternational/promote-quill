@@ -97,6 +97,8 @@
 	// Add custom promote editor css
 	__webpack_require__(27);
 
+	__webpack_require__(29);
+
 	// Add custom hr tag and custom video settings
 	_quill2.default.register({
 	  'formats/divider': _hr2.default,
@@ -324,6 +326,7 @@
 	  'alt', 'height', 'width'];
 
 	  options.theme = 'snow';
+	  options.debug = false;
 
 	  // Create editor in the newly created element with the correct options
 	  var editor = new _quill2.default(editorElement, options);
@@ -351,7 +354,9 @@
 
 	      if (range == null || range.length == 0) link_btn.classList.add("disabled");else link_btn.classList.remove("disabled");
 
-	      (0, _utils.updateHtml)(textarea, editor.container.firstChild.innerHTML);
+	      // Update textarea and signal change
+	      textarea.value = editor.container.firstChild.innerHTML;
+	      editor.emitter.emit("change");
 	    }
 	  });
 
@@ -16167,7 +16172,6 @@
 	exports.addTooltip = addTooltip;
 	exports.addButton = addButton;
 	exports.addSelect = addSelect;
-	exports.updateHtml = updateHtml;
 	function updateEditorContents(editor, textarea) {
 	  editor.clipboard.dangerouslyPasteHTML(textarea.value);
 	}
@@ -16204,14 +16208,6 @@
 	  html += '</select>';
 
 	  return html;
-	}
-
-	function updateHtml(textarea, editorContainer) {
-	  var evt = document.createEvent("HTMLEvents");
-
-	  textarea.value = editorContainer.innerHTML;
-	  evt.initEvent("change", false, true);
-	  textarea.dispatchEvent(evt);
 	}
 
 /***/ },
@@ -16907,9 +16903,33 @@
 
 
 	// module
-	exports.push([module.id, ".ql-snow .ql-picker.ql-header {\n    border: 1px solid #ccc;\n}\n\n.ql-toolbar, .ql-container {\n    width: 1170px;\n}\n\n.ql-editor {\n    min-height: 400px;\n}\n\n.disabled button {\n    color: #ccc;\n}\n\n.disabled .ql-stroke, button:hover.disabled .ql-stroke {\n    stroke: #ccc!important;\n}\n\n.disabled button:hover, button:hover.disabled, .disabled .ql-picker-label {\n    cursor: default;\n}\n\n.disabled .ql-fill, .disabled .ql-stroke.ql-fill, .disabled button:hover .ql-stroke.ql-fill, button:hover.disabled .ql-stroke.ql-fill {\n    fill: #ccc!important;\n}\n\n.disabled .ql-picker-label, .disabled .ql-picker-label.ql-active {\n    color: #ccc!important;\n}\n\n.disabled .ql-showcode .ql-fill, .disabled .ql-showcode .ql-stroke.ql-fill {\n    fill: #333!important;\n}\n\n.disabled .ql-showcode .ql-stroke {\n    stroke: #333!important;\n}\n\n.disabled button:hover.ql-showcode {\n    cursor: pointer;\n}\n\n.disabled button:hover.ql-showcode .ql-stroke.ql-fill {\n    fill: #06c!important;\n}\n\n.disabled button:hover.ql-showcode .ql-stroke {\n    stroke: #06c!important;\n}\n", ""]);
+	exports.push([module.id, ".ql-snow .ql-picker.ql-header {\n    border: 1px solid #ccc;\n}\n\n.ql-editor {\n    min-height: 400px;\n    max-height: 800px;\n}\n\n.disabled button {\n    color: #ccc;\n}\n\n.disabled .ql-stroke, button:hover.disabled .ql-stroke {\n    stroke: #ccc!important;\n}\n\n.disabled button:hover, button:hover.disabled, .disabled .ql-picker-label {\n    cursor: default;\n}\n\n.disabled .ql-fill, .disabled .ql-stroke.ql-fill, .disabled button:hover .ql-stroke.ql-fill, button:hover.disabled .ql-stroke.ql-fill {\n    fill: #ccc!important;\n}\n\n.disabled .ql-picker-label, .disabled .ql-picker-label.ql-active {\n    color: #ccc!important;\n}\n\n.disabled .ql-showcode .ql-fill, .disabled .ql-showcode .ql-stroke.ql-fill {\n    fill: #333!important;\n}\n\n.disabled .ql-showcode .ql-stroke {\n    stroke: #333!important;\n}\n\n.disabled button:hover.ql-showcode {\n    cursor: pointer;\n}\n\n.disabled button:hover.ql-showcode .ql-stroke.ql-fill {\n    fill: #06c!important;\n}\n\n.disabled button:hover.ql-showcode .ql-stroke {\n    stroke: #06c!important;\n}\n", ""]);
 
 	// exports
+
+
+/***/ },
+/* 29 */
+/***/ function(module, exports) {
+
+	if (typeof Function.prototype.bind != 'function') {
+	    Function.prototype.bind = function bind(obj) {
+	        var args = Array.prototype.slice.call(arguments, 1),
+	            self = this,
+	            nop = function() {
+	            },
+	            bound = function() {
+	                return self.apply(
+	                    this instanceof nop ? this : (obj || {}), args.concat(
+	                        Array.prototype.slice.call(arguments)
+	                    )
+	                );
+	            };
+	        nop.prototype = this.prototype || {};
+	        bound.prototype = new nop();
+	        return bound;
+	    };
+	}
 
 
 /***/ }
