@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/avidity/promote-editor.git"
+    "url": "git+https://github.com/avidity/promote-quill.git"
   },
   "author": "Andréas Kühne <andreas.kuhne@hypercode.se>",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/avidity/promote-editor/issues"
+    "url": "https://github.com/avidity/promote-quill/issues"
   },
-  "homepage": "https://github.com/avidity/promote-editor#readme",
+  "homepage": "https://github.com/avidity/promote-quill#readme",
   "dependencies": {
     "html-beautify": "1.0.4",
     "parchment": "1.0.8",
