@@ -16000,6 +16000,9 @@
 	  value: true
 	});
 	exports.updateEditorContents = updateEditorContents;
+	exports.addButton = addButton;
+	exports.addSelect = addSelect;
+	exports.addButtons = addButtons;
 	exports.createToolbar = createToolbar;
 	function updateEditorContents(editor, textarea) {
 	  editor.clipboard.dangerouslyPasteHTML(textarea.value);
