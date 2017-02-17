@@ -1,6 +1,6 @@
 /*!
  * (C) Copyright Promote International AB
- * Promote editor version: 0.5.0
+ * Promote editor version: 0.6.0
  */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -55,7 +55,7 @@
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -66,42 +66,30 @@
 
 	var _quill2 = _interopRequireDefault(_quill);
 
-	var _parchment = __webpack_require__(7);
-
-	var _parchment2 = _interopRequireDefault(_parchment);
-
-	var _quillDelta = __webpack_require__(8);
-
-	var _quillDelta2 = _interopRequireDefault(_quillDelta);
-
-	var _hr = __webpack_require__(15);
+	var _hr = __webpack_require__(7);
 
 	var _hr2 = _interopRequireDefault(_hr);
 
-	var _promote_video = __webpack_require__(16);
+	var _promote_video = __webpack_require__(8);
 
-	var _utils = __webpack_require__(17);
+	var _handlers = __webpack_require__(9);
 
-	var _htmlBeautify = __webpack_require__(18);
-
-	var _htmlBeautify2 = _interopRequireDefault(_htmlBeautify);
+	var _utils = __webpack_require__(20);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	// Add custom icons
 	var icons = _quill2.default.import('ui/icons');
 	icons['divider'] = '&minus;'; // TODO: Update to fa minus?
-	icons['showcode'] = __webpack_require__(20);
-	icons['undo'] = __webpack_require__(21);
-	icons['redo'] = __webpack_require__(22);
+	icons['showcode'] = __webpack_require__(21);
+	icons['undo'] = __webpack_require__(22);
+	icons['redo'] = __webpack_require__(23);
 
 	// Add default quill css
-	__webpack_require__(23);
+	__webpack_require__(24);
 
 	// Add custom promote editor css
-	__webpack_require__(27);
-
-	__webpack_require__(29);
+	__webpack_require__(28);
 
 	// Add custom hr tag and custom video settings
 	_quill2.default.register({
@@ -109,11 +97,20 @@
 	  'formats/video': _promote_video.PromoteVideo
 	}, true);
 
+	var defaultToolbar = [{ 'bold': true, 'italic': true, 'link': true }, { 'header': true }, { 'ordered_list': true, 'bullet_list': true, 'blockquote': true }, { 'align': true }, { 'video': true, 'divider': true }, { 'undo': true, 'redo': true, 'clean': true, 'showcode': true }];
+
 	function makeEditor(textarea) {
-	  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+	  var editorTools = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultToolbar;
 
 	  var os = "win";
 	  var editorId = parseInt(Math.random() * 10000);
+	  var options = {
+	    modules: {
+	      toolbar: {
+	        handlers: {}
+	      }
+	    }
+	  };
 
 	  // Add check for os - used to show tooltip shortcuts
 	  if (/Linux/i.test(navigator.platform)) os = "lin";
@@ -139,196 +136,90 @@
 	  textarea.style.display = "none";
 
 	  // Create tooltips for editor
-	  options.tooltips = options.tooltips || {};
-	  options.tooltips.bold = (0, _utils.addTooltip)(options, "bold", 'Toggle bold style', os, "(ctrl+b)", "(cmd+b)");
-	  options.tooltips.italic = (0, _utils.addTooltip)(options, "italic", 'Toggle emphasis', os, "(ctrl+i)", "(cmd+i)");
-	  options.tooltips.link = (0, _utils.addTooltip)(options, "link", 'Add / edit link', os, "(ctrl+k)", "(cmd+k)");
-	  options.tooltips.header = (0, _utils.addTooltip)(options, "header", 'Select header type');
-	  options.tooltips.list_ordered = (0, _utils.addTooltip)(options, "list_ordered", 'Wrap in ordered list');
-	  options.tooltips.list_bullet = (0, _utils.addTooltip)(options, "list_bullet", 'Wrap in bullet list');
-	  options.tooltips.blockquote = (0, _utils.addTooltip)(options, "blockquote", 'Wrap in block quote');
-	  options.tooltips.align = (0, _utils.addTooltip)(options, "align", 'Select alignment');
-	  options.tooltips.video = (0, _utils.addTooltip)(options, "video", 'Insert video');
-	  options.tooltips.divider = (0, _utils.addTooltip)(options, "divider", 'Insert divider');
-	  options.tooltips.undo = (0, _utils.addTooltip)(options, "undo", 'Undo', os, "(ctrl+z)", "(cmd+z)");
-	  options.tooltips.redo = (0, _utils.addTooltip)(options, "redo", 'Redo', os, "(ctrl+shift+z)", "(cmd+shift+z)", "(ctrl+y)");
-	  options.tooltips.clean = (0, _utils.addTooltip)(options, "clean", 'Remove all formatting on selected text');
-	  options.tooltips.showcode = (0, _utils.addTooltip)(options, "showcode", 'Toggle code view');
-
-	  toolbarElement.innerHTML = options.toolbar_items ||
-	  // Add simple formatting buttons
-	  '<span class="ql-formats">' + (0, _utils.addButton)(options, "bold") + (0, _utils.addButton)(options, "italic") + (0, _utils.addButton)(options, "link", { disabled: true }) + '</span>' +
-	  // Add header dropdown
-	  '<span class="ql-formats">' + (0, _utils.addSelect)(options, "header", [1, 2, 3, null]) + '</span>' +
-	  // Add list buttons
-	  '<span class="ql-formats">' + (0, _utils.addButton)(options, "list", { value: "ordered" }) + (0, _utils.addButton)(options, "list", { value: "bullet" }) + (0, _utils.addButton)(options, "blockquote") + '</span>' +
-	  // Add alignment button
-	  '<span class="ql-formats">' + (0, _utils.addSelect)(options, "align", [null, 'center', 'right']) + '</span>' +
-	  // Add image, pictures and hr tags
-	  '<span class="ql-formats">' + (0, _utils.addButton)(options, "video") + (0, _utils.addButton)(options, "divider") + '</span>' +
-	  // Add undo / redo / clean / showcode buttons
-	  '<span class="ql-formats">' + (0, _utils.addButton)(options, "undo", { disabled: true }) + (0, _utils.addButton)(options, "redo", { disabled: true }) + (0, _utils.addButton)(options, "clean") + (0, _utils.addButton)(options, "showcode") + '</span>';
+	  toolbarElement.innerHTML = (0, _utils.createToolbar)(editorTools, os);
 
 	  // Add our default toolbar
-	  options.modules = options.modules || {};
-	  options.modules.toolbar = options.modules.toolbar || {};
-	  options.modules.toolbar.container = options.modules.toolbar.container || "#" + toolbarElement.id;
+	  options.modules.toolbar.container = "#" + toolbarElement.id;
 
-	  // Add the toolbar module handlers
-	  options.modules.toolbar.handlers = options.modules.toolbar.handlers || {
-	    clean: function clean() {
-	      var _this = this;
+	  // Make sure only our custom formats are used
+	  options.formats = [
+	  // Add attributes that we want to be able to parse (used on images and video links)
+	  'alt', 'height', 'width', 'image'];
+	  var _iteratorNormalCompletion = true;
+	  var _didIteratorError = false;
+	  var _iteratorError = undefined;
 
-	      var range = this.quill.getSelection();
-	      if (range == null) return;
-	      if (range.length == 0) {
-	        var formats = this.quill.getFormat();
-	        Object.keys(formats).forEach(function (name) {
-	          // Clean functionality in existing apps only clean inline formats
-	          if (_parchment2.default.query(name, _parchment2.default.Scope.INLINE) != null) {
-	            _this.quill.format(name, false);
-	          }
-	        });
-	      } else {
-	        var contents = this.quill.getContents(range);
-	        var start_index = range.index;
+	  try {
+	    for (var _iterator = editorTools[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	      var item = _step.value;
+	      var _iteratorNormalCompletion3 = true;
+	      var _didIteratorError3 = false;
+	      var _iteratorError3 = undefined;
 
-	        var _iteratorNormalCompletion = true;
-	        var _didIteratorError = false;
-	        var _iteratorError = undefined;
+	      try {
+	        for (var _iterator3 = Object.keys(item)[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+	          var key = _step3.value;
 
+	          if (['ordered_list', 'bullet_list'].indexOf(key) != -1) key = 'list';
+
+	          if (options.formats.indexOf(key) == -1) options.formats.push(key);
+	        }
+	      } catch (err) {
+	        _didIteratorError3 = true;
+	        _iteratorError3 = err;
+	      } finally {
 	        try {
-	          for (var _iterator = contents.ops[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-	            var selection = _step.value;
-
-	            // Check for images and videos - don't clear them - just clear the attributes
-	            if (selection.insert && selection.insert instanceof Object) {
-	              var _contents = this.quill.getContents(start_index, 1);
-	              var diff = void 0;
-	              if (selection.insert.image) {
-	                // If selection is image - remove attributes
-	                diff = _contents.diff(new _quillDelta2.default([{
-	                  insert: {
-	                    image: selection.insert.image
-	                  },
-	                  attributes: {}
-	                }]));
-	              }
-
-	              if (selection.insert.video) {
-	                // If selection is video - set default attributes
-	                diff = _contents.diff(new _quillDelta2.default([{
-	                  insert: {
-	                    video: selection.insert.video
-	                  },
-	                  attributes: {
-	                    width: _promote_video.DEFAULT_ATTRIBUTES['width'],
-	                    height: _promote_video.DEFAULT_ATTRIBUTES['height']
-	                  }
-	                }]));
-	              }
-
-	              if (diff) {
-	                // Apply diff delta if there is any
-	                var delta = new _quillDelta2.default().retain(start_index).concat(diff);
-	                this.quill.editor.applyDelta(delta);
-	              }
-
-	              // Both images and videos only add 1 to the index returned by the selection item.
-	              start_index += 1;
-	            } else {
-	              var selection_length = selection.insert.length;
-	              // If the selection ends with \n, we should remove the \n.
-	              if (selection.insert.endsWith('\n')) this.quill.removeFormat(start_index, selection_length - 1, _quill2.default.sources.USER);else this.quill.removeFormat(start_index, selection_length, _quill2.default.sources.USER);
-	              start_index += selection_length;
-	            }
+	          if (!_iteratorNormalCompletion3 && _iterator3.return) {
+	            _iterator3.return();
 	          }
-	        } catch (err) {
-	          _didIteratorError = true;
-	          _iteratorError = err;
 	        } finally {
-	          try {
-	            if (!_iteratorNormalCompletion && _iterator.return) {
-	              _iterator.return();
-	            }
-	          } finally {
-	            if (_didIteratorError) {
-	              throw _iteratorError;
-	            }
+	          if (_didIteratorError3) {
+	            throw _iteratorError3;
 	          }
 	        }
 	      }
-	    },
-	    divider: function divider() {
-	      if (!this.container.classList.contains("disabled")) {
-	        var range = editor.getSelection(true);
-	        editor.insertText(range.index, '\n', _quill2.default.sources.USER);
-	        editor.insertEmbed(range.index + 1, 'divider', true, _quill2.default.sources.USER);
-	        editor.setSelection(range.index + 2, _quill2.default.sources.SILENT);
+	    }
+	  } catch (err) {
+	    _didIteratorError = true;
+	    _iteratorError = err;
+	  } finally {
+	    try {
+	      if (!_iteratorNormalCompletion && _iterator.return) {
+	        _iterator.return();
 	      }
-	    },
-	    link: function link(value) {
-	      if (value) {
-	        var range = this.quill.getSelection();
-	        if (range == null || range.length == 0) return;
-	        var tooltip = this.quill.theme.tooltip;
-	        tooltip.edit('link');
-	      } else {
-	        this.quill.format('link', false);
-	      }
-	    },
-	    undo: function undo() {
-	      var undo_btn = this.container.getElementsByClassName("ql-undo")[0];
-	      if (!undo_btn.classList.contains("disabled") && !this.container.classList.contains("disabled")) {
-	        this.container.getElementsByClassName("ql-redo")[0].classList.remove("disabled");
-	        this.quill.history.undo();
-	        if (this.quill.history.stack.undo.length == 0) undo_btn.classList.add("disabled");
-	      }
-	    },
-	    redo: function redo() {
-	      var redo_btn = this.container.getElementsByClassName("ql-redo")[0];
-	      if (!redo_btn.classList.contains("disabled") && !this.container.classList.contains("disabled")) {
-	        var _undo_btn = this.container.getElementsByClassName("ql-undo")[0];
-
-	        this.quill.history.redo();
-	        if (this.quill.history.stack.redo.length == 0) redo_btn.classList.add("disabled");
-
-	        _undo_btn.classList.remove("disabled");
-	      }
-	    },
-	    showcode: function showcode() {
-	      var editorContainer = this.quill.container;
-
-	      if (textarea.style.display == 'none') {
-	        var qlEditorElement = editorContainer.firstChild;
-	        var editorHtml = qlEditorElement.innerHTML;
-	        textarea.style.width = qlEditorElement.clientWidth + "px";
-	        textarea.style.height = qlEditorElement.clientHeight + "px";
-	        editorContainer.style.display = 'none';
-	        textarea.style.display = 'block';
-	        this.container.classList.add("disabled");
-	        this.quill.disable();
-	        textarea.value = (0, _htmlBeautify2.default)(editorHtml);
-	      } else {
-	        (0, _utils.updateEditorContents)(editor, textarea);
-	        this.quill.enable();
-	        textarea.style.display = 'none';
-	        editorContainer.style.display = 'block';
-	        this.container.classList.remove("disabled");
+	    } finally {
+	      if (_didIteratorError) {
+	        throw _iteratorError;
 	      }
 	    }
-	  };
+	  }
 
-	  // Make sure only our custom formats are used
-	  options.formats = options.formats || [
-	  // Add default quilljs formats we want
-	  'align', 'blockquote', 'bold', 'divider', 'header', 'italic', 'image', 'link', 'list', 'video',
+	  var _iteratorNormalCompletion2 = true;
+	  var _didIteratorError2 = false;
+	  var _iteratorError2 = undefined;
 
-	  // Add attributes that we want to be able to parse as well (used on images and video links)
-	  'alt', 'height', 'width'];
+	  try {
+	    for (var _iterator2 = options.formats[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+	      var format = _step2.value;
+
+	      if (Object.keys(_handlers.defaultHandlers).indexOf(format) != -1) options.modules.toolbar.handlers[format] = _handlers.defaultHandlers[format];
+	    }
+	  } catch (err) {
+	    _didIteratorError2 = true;
+	    _iteratorError2 = err;
+	  } finally {
+	    try {
+	      if (!_iteratorNormalCompletion2 && _iterator2.return) {
+	        _iterator2.return();
+	      }
+	    } finally {
+	      if (_didIteratorError2) {
+	        throw _iteratorError2;
+	      }
+	    }
+	  }
 
 	  options.theme = 'snow';
-	  options.debug = false;
 
 	  // Create editor in the newly created element with the correct options
 	  var editor = new _quill2.default(editorElement, options);
@@ -336,6 +227,8 @@
 	  // Add current textarea value
 	  (0, _utils.updateEditorContents)(editor, textarea);
 	  editor.history.clear();
+
+	  editor.textarea = textarea;
 
 	  // Set default text for link placeholder
 	  editorElement.getElementsByClassName("ql-tooltip")[0].getElementsByTagName('input')[0].setAttribute('data-link', "Embed link");
@@ -13059,6 +12952,318 @@
 /* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _quill = __webpack_require__(2);
+
+	var _quill2 = _interopRequireDefault(_quill);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var BlockEmbed = _quill2.default.import('blots/block/embed');
+
+	var Hr = function (_BlockEmbed) {
+	  _inherits(Hr, _BlockEmbed);
+
+	  function Hr() {
+	    _classCallCheck(this, Hr);
+
+	    return _possibleConstructorReturn(this, (Hr.__proto__ || Object.getPrototypeOf(Hr)).apply(this, arguments));
+	  }
+
+	  return Hr;
+	}(BlockEmbed);
+
+	Hr.blotName = 'divider';
+	Hr.tagName = 'hr';
+
+	exports.default = Hr;
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.PromoteVideo = exports.DEFAULT_ATTRIBUTES = undefined;
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+	var _quill = __webpack_require__(2);
+
+	var _quill2 = _interopRequireDefault(_quill);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Video = _quill2.default.import('formats/video');
+
+	// Set default values for the video iframe - used if no values are set or on creation.
+	var DEFAULT_ATTRIBUTES = {
+	  'height': 281,
+	  'width': 500
+	};
+
+	var PromoteVideo = function (_Video) {
+	  _inherits(PromoteVideo, _Video);
+
+	  function PromoteVideo() {
+	    _classCallCheck(this, PromoteVideo);
+
+	    return _possibleConstructorReturn(this, (PromoteVideo.__proto__ || Object.getPrototypeOf(PromoteVideo)).apply(this, arguments));
+	  }
+
+	  _createClass(PromoteVideo, [{
+	    key: 'format',
+	    value: function format(name, value) {
+	      // Override default format method to set default size for height and width
+	      if (DEFAULT_ATTRIBUTES.hasOwnProperty(name)) {
+	        if (value) {
+	          this.domNode.setAttribute(name, value);
+	        } else {
+	          this.domNode.setAttribute(name, DEFAULT_ATTRIBUTES[name]);
+	        }
+	      } else {
+	        _get(PromoteVideo.prototype.__proto__ || Object.getPrototypeOf(PromoteVideo.prototype), 'format', this).call(this, name, value);
+	      }
+	    }
+	  }], [{
+	    key: 'create',
+	    value: function create(value) {
+	      // Override create method - make sure default size is used.
+	      var node = _get(PromoteVideo.__proto__ || Object.getPrototypeOf(PromoteVideo), 'create', this).call(this, value);
+	      node.setAttribute('height', DEFAULT_ATTRIBUTES['height']);
+	      node.setAttribute('width', DEFAULT_ATTRIBUTES['width']);
+	      return node;
+	    }
+	  }, {
+	    key: 'formats',
+	    value: function formats(domNode) {
+	      // Override default formats static method to make sure that the default sizes are used on the video
+	      return Object.keys(DEFAULT_ATTRIBUTES).reduce(function (formats, attribute) {
+	        if (domNode.hasAttribute(attribute)) {
+	          formats[attribute] = domNode.getAttribute(attribute);
+	        } else {
+	          formats[attribute] = DEFAULT_ATTRIBUTES[attribute];
+	        }
+	        return formats;
+	      }, {});
+	    }
+	  }]);
+
+	  return PromoteVideo;
+	}(Video);
+
+	PromoteVideo.blotName = 'video';
+	PromoteVideo.className = 'ql-video';
+	PromoteVideo.tagName = 'IFRAME';
+
+	exports.DEFAULT_ATTRIBUTES = DEFAULT_ATTRIBUTES;
+	exports.PromoteVideo = PromoteVideo;
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.defaultHandlers = undefined;
+
+	var _quill = __webpack_require__(2);
+
+	var _quill2 = _interopRequireDefault(_quill);
+
+	var _parchment = __webpack_require__(10);
+
+	var _parchment2 = _interopRequireDefault(_parchment);
+
+	var _quillDelta = __webpack_require__(11);
+
+	var _quillDelta2 = _interopRequireDefault(_quillDelta);
+
+	var _promote_video = __webpack_require__(8);
+
+	var _htmlBeautify = __webpack_require__(18);
+
+	var _htmlBeautify2 = _interopRequireDefault(_htmlBeautify);
+
+	var _utils = __webpack_require__(20);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var defaultHandlers = exports.defaultHandlers = {
+	  clean: function clean() {
+	    var _this = this;
+
+	    var range = this.quill.getSelection();
+	    if (range == null) return;
+	    if (range.length == 0) {
+	      var formats = this.quill.getFormat();
+	      Object.keys(formats).forEach(function (name) {
+	        // Clean functionality in existing apps only clean inline formats
+	        if (_parchment2.default.query(name, _parchment2.default.Scope.INLINE) != null) {
+	          _this.quill.format(name, false);
+	        }
+	      });
+	    } else {
+	      var contents = this.quill.getContents(range);
+	      var start_index = range.index;
+
+	      var _iteratorNormalCompletion = true;
+	      var _didIteratorError = false;
+	      var _iteratorError = undefined;
+
+	      try {
+	        for (var _iterator = contents.ops[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	          var selection = _step.value;
+
+	          // Check for images and videos - don't clear them - just clear the attributes
+	          if (selection.insert && selection.insert instanceof Object) {
+	            var _contents = this.quill.getContents(start_index, 1);
+	            var diff = void 0;
+	            if (selection.insert.image) {
+	              // If selection is image - remove attributes
+	              diff = _contents.diff(new _quillDelta2.default([{
+	                insert: {
+	                  image: selection.insert.image
+	                },
+	                attributes: {}
+	              }]));
+	            }
+
+	            if (selection.insert.video) {
+	              // If selection is video - set default attributes
+	              diff = _contents.diff(new _quillDelta2.default([{
+	                insert: {
+	                  video: selection.insert.video
+	                },
+	                attributes: {
+	                  width: _promote_video.DEFAULT_ATTRIBUTES['width'],
+	                  height: _promote_video.DEFAULT_ATTRIBUTES['height']
+	                }
+	              }]));
+	            }
+
+	            if (diff) {
+	              // Apply diff delta if there is any
+	              var delta = new _quillDelta2.default().retain(start_index).concat(diff);
+	              this.quill.editor.applyDelta(delta);
+	            }
+
+	            // Both images and videos only add 1 to the index returned by the selection item.
+	            start_index += 1;
+	          } else {
+	            var selection_length = selection.insert.length;
+	            // If the selection ends with \n, we should remove the \n.
+	            if (selection.insert.endsWith('\n')) this.quill.removeFormat(start_index, selection_length - 1, _quill2.default.sources.USER);else this.quill.removeFormat(start_index, selection_length, _quill2.default.sources.USER);
+	            start_index += selection_length;
+	          }
+	        }
+	      } catch (err) {
+	        _didIteratorError = true;
+	        _iteratorError = err;
+	      } finally {
+	        try {
+	          if (!_iteratorNormalCompletion && _iterator.return) {
+	            _iterator.return();
+	          }
+	        } finally {
+	          if (_didIteratorError) {
+	            throw _iteratorError;
+	          }
+	        }
+	      }
+	    }
+	  },
+	  divider: function divider() {
+	    if (!this.container.classList.contains("disabled")) {
+	      var range = editor.getSelection(true);
+	      editor.insertText(range.index, '\n', _quill2.default.sources.USER);
+	      editor.insertEmbed(range.index + 1, 'divider', true, _quill2.default.sources.USER);
+	      editor.setSelection(range.index + 2, _quill2.default.sources.SILENT);
+	    }
+	  },
+	  link: function link(value) {
+	    if (value) {
+	      var range = this.quill.getSelection();
+	      if (range == null || range.length == 0) return;
+	      var tooltip = this.quill.theme.tooltip;
+	      tooltip.edit('link');
+	    } else {
+	      this.quill.format('link', false);
+	    }
+	  },
+	  undo: function undo() {
+	    var undo_btn = this.container.getElementsByClassName("ql-undo")[0];
+	    if (!undo_btn.classList.contains("disabled") && !this.container.classList.contains("disabled")) {
+	      this.container.getElementsByClassName("ql-redo")[0].classList.remove("disabled");
+	      this.quill.history.undo();
+	      if (this.quill.history.stack.undo.length == 0) undo_btn.classList.add("disabled");
+	    }
+	  },
+	  redo: function redo() {
+	    var redo_btn = this.container.getElementsByClassName("ql-redo")[0];
+	    if (!redo_btn.classList.contains("disabled") && !this.container.classList.contains("disabled")) {
+	      var undo_btn = this.container.getElementsByClassName("ql-undo")[0];
+
+	      this.quill.history.redo();
+	      if (this.quill.history.stack.redo.length == 0) redo_btn.classList.add("disabled");
+
+	      undo_btn.classList.remove("disabled");
+	    }
+	  },
+	  showcode: function showcode() {
+	    var editor = this.quill;
+	    var editorContainer = editor.container;
+	    var textarea = editor.textarea;
+
+	    if (textarea.style.display == 'none') {
+	      var qlEditorElement = editorContainer.firstChild;
+	      var editorHtml = qlEditorElement.innerHTML;
+	      textarea.style.width = qlEditorElement.clientWidth + "px";
+	      textarea.style.height = qlEditorElement.clientHeight + "px";
+	      editorContainer.style.display = 'none';
+	      textarea.style.display = 'block';
+	      this.container.classList.add("disabled");
+	      this.quill.disable();
+	      textarea.value = (0, _htmlBeautify2.default)(editorHtml);
+	    } else {
+	      (0, _utils.updateEditorContents)(editor, textarea);
+	      this.quill.enable();
+	      textarea.style.display = 'none';
+	      editorContainer.style.display = 'block';
+	      this.container.classList.remove("disabled");
+	    }
+	  }
+	};
+
+/***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -14631,13 +14836,13 @@
 	//# sourceMappingURL=parchment.js.map
 
 /***/ },
-/* 8 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var diff = __webpack_require__(9);
-	var equal = __webpack_require__(10);
-	var extend = __webpack_require__(13);
-	var op = __webpack_require__(14);
+	var diff = __webpack_require__(12);
+	var equal = __webpack_require__(13);
+	var extend = __webpack_require__(16);
+	var op = __webpack_require__(17);
 
 
 	var NULL_CHARACTER = String.fromCharCode(0);  // Placeholder char for embed in diff()
@@ -14947,7 +15152,7 @@
 
 
 /***/ },
-/* 9 */
+/* 12 */
 /***/ function(module, exports) {
 
 	/**
@@ -15651,12 +15856,12 @@
 
 
 /***/ },
-/* 10 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var pSlice = Array.prototype.slice;
-	var objectKeys = __webpack_require__(11);
-	var isArguments = __webpack_require__(12);
+	var objectKeys = __webpack_require__(14);
+	var isArguments = __webpack_require__(15);
 
 	var deepEqual = module.exports = function (actual, expected, opts) {
 	  if (!opts) opts = {};
@@ -15751,7 +15956,7 @@
 
 
 /***/ },
-/* 11 */
+/* 14 */
 /***/ function(module, exports) {
 
 	exports = module.exports = typeof Object.keys === 'function'
@@ -15766,7 +15971,7 @@
 
 
 /***/ },
-/* 12 */
+/* 15 */
 /***/ function(module, exports) {
 
 	var supportsArgumentsClass = (function(){
@@ -15792,7 +15997,7 @@
 
 
 /***/ },
-/* 13 */
+/* 16 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -15884,11 +16089,11 @@
 
 
 /***/ },
-/* 14 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var equal = __webpack_require__(10);
-	var extend = __webpack_require__(13);
+	var equal = __webpack_require__(13);
+	var extend = __webpack_require__(16);
 
 
 	var lib = {
@@ -16027,190 +16232,6 @@
 
 	module.exports = lib;
 
-
-/***/ },
-/* 15 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _quill = __webpack_require__(2);
-
-	var _quill2 = _interopRequireDefault(_quill);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var BlockEmbed = _quill2.default.import('blots/block/embed');
-
-	var Hr = function (_BlockEmbed) {
-	  _inherits(Hr, _BlockEmbed);
-
-	  function Hr() {
-	    _classCallCheck(this, Hr);
-
-	    return _possibleConstructorReturn(this, (Hr.__proto__ || Object.getPrototypeOf(Hr)).apply(this, arguments));
-	  }
-
-	  return Hr;
-	}(BlockEmbed);
-
-	Hr.blotName = 'divider';
-	Hr.tagName = 'hr';
-
-	exports.default = Hr;
-
-/***/ },
-/* 16 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.PromoteVideo = exports.DEFAULT_ATTRIBUTES = undefined;
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-
-	var _quill = __webpack_require__(2);
-
-	var _quill2 = _interopRequireDefault(_quill);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var Video = _quill2.default.import('formats/video');
-
-	// Set default values for the video iframe - used if no values are set or on creation.
-	var DEFAULT_ATTRIBUTES = {
-	  'height': 281,
-	  'width': 500
-	};
-
-	var PromoteVideo = function (_Video) {
-	  _inherits(PromoteVideo, _Video);
-
-	  function PromoteVideo() {
-	    _classCallCheck(this, PromoteVideo);
-
-	    return _possibleConstructorReturn(this, (PromoteVideo.__proto__ || Object.getPrototypeOf(PromoteVideo)).apply(this, arguments));
-	  }
-
-	  _createClass(PromoteVideo, [{
-	    key: 'format',
-	    value: function format(name, value) {
-	      // Override default format method to set default size for height and width
-	      if (DEFAULT_ATTRIBUTES.hasOwnProperty(name)) {
-	        if (value) {
-	          this.domNode.setAttribute(name, value);
-	        } else {
-	          this.domNode.setAttribute(name, DEFAULT_ATTRIBUTES[name]);
-	        }
-	      } else {
-	        _get(PromoteVideo.prototype.__proto__ || Object.getPrototypeOf(PromoteVideo.prototype), 'format', this).call(this, name, value);
-	      }
-	    }
-	  }], [{
-	    key: 'create',
-	    value: function create(value) {
-	      // Override create method - make sure default size is used.
-	      var node = _get(PromoteVideo.__proto__ || Object.getPrototypeOf(PromoteVideo), 'create', this).call(this, value);
-	      node.setAttribute('height', DEFAULT_ATTRIBUTES['height']);
-	      node.setAttribute('width', DEFAULT_ATTRIBUTES['width']);
-	      return node;
-	    }
-	  }, {
-	    key: 'formats',
-	    value: function formats(domNode) {
-	      // Override default formats static method to make sure that the default sizes are used on the video
-	      return Object.keys(DEFAULT_ATTRIBUTES).reduce(function (formats, attribute) {
-	        if (domNode.hasAttribute(attribute)) {
-	          formats[attribute] = domNode.getAttribute(attribute);
-	        } else {
-	          formats[attribute] = DEFAULT_ATTRIBUTES[attribute];
-	        }
-	        return formats;
-	      }, {});
-	    }
-	  }]);
-
-	  return PromoteVideo;
-	}(Video);
-
-	PromoteVideo.blotName = 'video';
-	PromoteVideo.className = 'ql-video';
-	PromoteVideo.tagName = 'IFRAME';
-
-	exports.DEFAULT_ATTRIBUTES = DEFAULT_ATTRIBUTES;
-	exports.PromoteVideo = PromoteVideo;
-
-/***/ },
-/* 17 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.updateEditorContents = updateEditorContents;
-	exports.addTooltip = addTooltip;
-	exports.addButton = addButton;
-	exports.addSelect = addSelect;
-	function updateEditorContents(editor, textarea) {
-	  editor.clipboard.dangerouslyPasteHTML(textarea.value);
-	}
-
-	function addTooltip(options, name, defaultString, os, defaultKeyBinding, macKeyBinding, winKeyBinding) {
-	  var returnString = options.tooltips[name] || defaultString;
-
-	  if (os) {
-	    var keyBinding = defaultKeyBinding;
-	    if (os == 'mac') keyBinding = macKeyBinding;
-
-	    if (os == 'win' && winKeyBinding) keyBinding = winKeyBinding;
-
-	    returnString += " " + keyBinding;
-	  }
-
-	  return returnString;
-	}
-
-	function addButton(options, name) {
-	  var button_options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-
-	  var tooltip_name = name + (button_options.value ? "_" + button_options.value : "");
-
-	  return '<button class="ql-' + name + (button_options.disabled ? ' disabled' : '') + '" type="button" title="' + options.tooltips[tooltip_name] + '"' + (button_options.value ? ' value="' + button_options.value + '"' : '') + '></button>';
-	}
-
-	function addSelect(options, name, select_options) {
-	  var html = '<select class="ql-' + name + '" title="' + options.tooltips[name] + '">';
-	  for (var i = 0; i < select_options.length; i++) {
-	    var option = select_options[i];
-	    if (select_options[i]) html += '<option value="' + select_options[i] + '"></option>';else html += '<option selected></option>';
-	  }
-	  html += '</select>';
-
-	  return html;
-	}
 
 /***/ },
 /* 18 */
@@ -16508,31 +16529,225 @@
 /* 20 */
 /***/ function(module, exports) {
 
-	module.exports = "<svg viewbox=\"0 0 18 18\"><polyline class=\"ql-even ql-stroke\" points=\"5 7 3 9 5 11\"></polyline><polyline class=\"ql-even ql-stroke\" points=\"13 7 15 9 13 11\"></polyline><line class=\"ql-stroke\" x1=\"10\" x2=\"8\" y1=\"5\" y2=\"13\"></line></svg>"
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.updateEditorContents = updateEditorContents;
+	exports.createToolbar = createToolbar;
+	function updateEditorContents(editor, textarea) {
+	  editor.clipboard.dangerouslyPasteHTML(textarea.value);
+	}
+
+	var defaultTooltips = {
+	  bold: {
+	    defaultText: 'Toggle bold style',
+	    defaultKeys: {
+	      win: '(ctrl+b)',
+	      lin: '(ctrl+b)',
+	      mac: '(cmd+b)'
+	    }
+	  },
+	  italic: {
+	    defaultText: 'Toggle emphasis',
+	    defaultKeys: {
+	      win: '(ctrl+i)',
+	      lin: '(ctrl+i)',
+	      mac: '(cmd+i)'
+	    }
+	  },
+	  link: {
+	    defaultText: 'Add / edit link',
+	    defaultKeys: {
+	      win: '(ctrl+k)',
+	      lin: '(ctrl+k)',
+	      mac: '(cmd+k)'
+	    }
+	  },
+	  header: {
+	    defaultText: 'Select header type'
+	  },
+	  ordered_list: {
+	    defaultText: 'Wrap in ordered list'
+	  },
+	  bullet_list: {
+	    defaultText: 'Wrap in bullet list'
+	  },
+	  blockquote: {
+	    defaultText: 'Wrap in block quote'
+	  },
+	  align: {
+	    defaultText: 'Select alignment'
+	  },
+	  video: {
+	    defaultText: 'Insert video'
+	  },
+	  divider: {
+	    defaultText: 'Insert divider'
+	  },
+	  undo: {
+	    defaultText: 'Undo',
+	    defaultKeys: {
+	      win: '(ctrl+z)',
+	      lin: '(ctrl+z)',
+	      mac: '(cmd+z)'
+	    }
+	  },
+	  redo: {
+	    defaultText: 'Redo',
+	    defaultKeys: {
+	      win: '(ctrl+y)',
+	      lin: '(ctrl+shift+z)',
+	      mac: '(cmd+shift+z)'
+	    }
+	  },
+	  clean: {
+	    defaultText: 'Remove all formatting on selected text'
+	  },
+	  showcode: {
+	    defaultText: 'Toggle code view'
+	  }
+	};
+	function addButton(tooltip, name) {
+	  var button_options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+	  return '<button class="ql-' + name + (button_options.disabled ? ' disabled' : '') + '" type="button" title="' + tooltip + '"' + (button_options.value ? ' value="' + button_options.value + '"' : '') + '></button>';
+	}
+
+	function addSelect(tooltip, name, select_options) {
+	  var html = '<select class="ql-' + name + '" title="' + tooltip + '">';
+	  for (var i = 0; i < select_options.length; i++) {
+	    var option = select_options[i];
+	    if (select_options[i]) html += '<option value="' + select_options[i] + '"></option>';else html += '<option selected></option>';
+	  }
+	  html += '</select>';
+
+	  return html;
+	}
+
+	function addButtons(toolsMap, os) {
+	  var html = "";
+
+	  var _iteratorNormalCompletion = true;
+	  var _didIteratorError = false;
+	  var _iteratorError = undefined;
+
+	  try {
+	    for (var _iterator = Object.keys(toolsMap)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	      var name = _step.value;
+
+	      var options = void 0;
+	      var tooltip = typeof toolsMap[name] == "string" ? toolsMap[name] : defaultTooltips[name].defaultText;
+
+	      if (defaultTooltips[name].defaultKeys) tooltip += " " + defaultTooltips[name].defaultKeys[os];
+
+	      if (['link', 'redo', 'undo'].indexOf(name) != -1) {
+	        options = { disabled: true };
+	        html += addButton(tooltip, name, options);
+	      } else switch (name) {
+	        case 'align':
+	          options = [null, 'center', 'right'];
+	          html += addSelect(tooltip, name, options);
+	          break;
+	        case 'header':
+	          options = [1, 2, 3, null];
+	          html += addSelect(tooltip, name, options);
+	          break;
+	        case 'ordered_list':
+	          name = 'list';
+	          options = { value: "ordered" };
+	          html += addButton(tooltip, name, options);
+	          break;
+	        case 'bullet_list':
+	          name = 'list';
+	          options = { value: "bullet" };
+	          html += addButton(tooltip, name, options);
+	          break;
+	        default:
+	          html += addButton(tooltip, name, {});
+	      }
+	    }
+	  } catch (err) {
+	    _didIteratorError = true;
+	    _iteratorError = err;
+	  } finally {
+	    try {
+	      if (!_iteratorNormalCompletion && _iterator.return) {
+	        _iterator.return();
+	      }
+	    } finally {
+	      if (_didIteratorError) {
+	        throw _iteratorError;
+	      }
+	    }
+	  }
+
+	  return html;
+	}
+
+	function createToolbar(editorTools, os) {
+	  var toolbarHtml = "";
+
+	  var _iteratorNormalCompletion2 = true;
+	  var _didIteratorError2 = false;
+	  var _iteratorError2 = undefined;
+
+	  try {
+	    for (var _iterator2 = editorTools[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+	      var item = _step2.value;
+
+	      toolbarHtml += '<span class="ql-formats">';
+	      toolbarHtml += addButtons(item, os);
+	      toolbarHtml += '</span>';
+	    }
+	  } catch (err) {
+	    _didIteratorError2 = true;
+	    _iteratorError2 = err;
+	  } finally {
+	    try {
+	      if (!_iteratorNormalCompletion2 && _iterator2.return) {
+	        _iterator2.return();
+	      }
+	    } finally {
+	      if (_didIteratorError2) {
+	        throw _iteratorError2;
+	      }
+	    }
+	  }
+
+	  return toolbarHtml;
+	}
 
 /***/ },
 /* 21 */
 /***/ function(module, exports) {
 
-	module.exports = "<svg viewbox=\"0 0 18 18\"><polygon class=\"ql-fill ql-stroke\" points=\"6 10 4 12 2 10 6 10\"></polygon><path class=\"ql-stroke\" d=\"M8.09,13.91A4.6,4.6,0,0,0,9,14,5,5,0,1,0,4,9\"></path></svg>"
+	module.exports = "<svg viewbox=\"0 0 18 18\"><polyline class=\"ql-even ql-stroke\" points=\"5 7 3 9 5 11\"></polyline><polyline class=\"ql-even ql-stroke\" points=\"13 7 15 9 13 11\"></polyline><line class=\"ql-stroke\" x1=\"10\" x2=\"8\" y1=\"5\" y2=\"13\"></line></svg>"
 
 /***/ },
 /* 22 */
 /***/ function(module, exports) {
 
-	module.exports = "<svg viewbox=\"0 0 18 18\"><polygon class=\"ql-fill ql-stroke\" points=\"12 10 14 12 16 10 12 10\"></polygon><path class=\"ql-stroke\" d=\"M9.91,13.91A4.6,4.6,0,0,1,9,14a5,5,0,1,1,5-5\"></path></svg>"
+	module.exports = "<svg viewbox=\"0 0 18 18\"><polygon class=\"ql-fill ql-stroke\" points=\"6 10 4 12 2 10 6 10\"></polygon><path class=\"ql-stroke\" d=\"M8.09,13.91A4.6,4.6,0,0,0,9,14,5,5,0,1,0,4,9\"></path></svg>"
 
 /***/ },
 /* 23 */
+/***/ function(module, exports) {
+
+	module.exports = "<svg viewbox=\"0 0 18 18\"><polygon class=\"ql-fill ql-stroke\" points=\"12 10 14 12 16 10 12 10\"></polygon><path class=\"ql-stroke\" d=\"M9.91,13.91A4.6,4.6,0,0,1,9,14a5,5,0,1,1,5-5\"></path></svg>"
+
+/***/ },
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(24);
+	var content = __webpack_require__(25);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(26)(content, {});
+	var update = __webpack_require__(27)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -16549,10 +16764,10 @@
 	}
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(25)();
+	exports = module.exports = __webpack_require__(26)();
 	// imports
 
 
@@ -16563,7 +16778,7 @@
 
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports) {
 
 	/*
@@ -16619,7 +16834,7 @@
 
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -16871,16 +17086,16 @@
 
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(28);
+	var content = __webpack_require__(29);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(26)(content, {});
+	var update = __webpack_require__(27)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -16897,10 +17112,10 @@
 	}
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(25)();
+	exports = module.exports = __webpack_require__(26)();
 	// imports
 
 
@@ -16908,30 +17123,6 @@
 	exports.push([module.id, ".ql-snow .ql-picker.ql-header {\n    border: 1px solid #ccc;\n}\n\n.ql-editor {\n    min-height: 400px;\n    max-height: 800px;\n}\n\n.disabled button {\n    color: #ccc;\n}\n\n.disabled .ql-stroke, button:hover.disabled .ql-stroke {\n    stroke: #ccc!important;\n}\n\n.disabled button:hover, button:hover.disabled, .disabled .ql-picker-label {\n    cursor: default;\n}\n\n.disabled .ql-fill, .disabled .ql-stroke.ql-fill, .disabled button:hover .ql-stroke.ql-fill, button:hover.disabled .ql-stroke.ql-fill {\n    fill: #ccc!important;\n}\n\n.disabled .ql-picker-label, .disabled .ql-picker-label.ql-active {\n    color: #ccc!important;\n}\n\n.disabled .ql-showcode .ql-fill, .disabled .ql-showcode .ql-stroke.ql-fill {\n    fill: #333!important;\n}\n\n.disabled .ql-showcode .ql-stroke {\n    stroke: #333!important;\n}\n\n.disabled button:hover.ql-showcode {\n    cursor: pointer;\n}\n\n.disabled button:hover.ql-showcode .ql-stroke.ql-fill {\n    fill: #06c!important;\n}\n\n.disabled button:hover.ql-showcode .ql-stroke {\n    stroke: #06c!important;\n}\n", ""]);
 
 	// exports
-
-
-/***/ },
-/* 29 */
-/***/ function(module, exports) {
-
-	if (typeof Function.prototype.bind != 'function') {
-	    Function.prototype.bind = function bind(obj) {
-	        var args = Array.prototype.slice.call(arguments, 1),
-	            self = this,
-	            nop = function() {
-	            },
-	            bound = function() {
-	                return self.apply(
-	                    this instanceof nop ? this : (obj || {}), args.concat(
-	                        Array.prototype.slice.call(arguments)
-	                    )
-	                );
-	            };
-	        nop.prototype = this.prototype || {};
-	        bound.prototype = new nop();
-	        return bound;
-	    };
-	}
 
 
 /***/ }

@@ -51,7 +51,7 @@
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -62,25 +62,15 @@
 
 	var _quill2 = _interopRequireDefault(_quill);
 
-	var _parchment = __webpack_require__(7);
-
-	var _parchment2 = _interopRequireDefault(_parchment);
-
-	var _quillDelta = __webpack_require__(8);
-
-	var _quillDelta2 = _interopRequireDefault(_quillDelta);
-
 	var _hr = __webpack_require__(15);
 
 	var _hr2 = _interopRequireDefault(_hr);
 
 	var _promote_video = __webpack_require__(16);
 
+	var _handlers = __webpack_require__(30);
+
 	var _utils = __webpack_require__(17);
-
-	var _htmlBeautify = __webpack_require__(18);
-
-	var _htmlBeautify2 = _interopRequireDefault(_htmlBeautify);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -97,19 +87,26 @@
 	// Add custom promote editor css
 	__webpack_require__(27);
 
-	__webpack_require__(29);
-
 	// Add custom hr tag and custom video settings
 	_quill2.default.register({
 	  'formats/divider': _hr2.default,
 	  'formats/video': _promote_video.PromoteVideo
 	}, true);
 
+	var defaultToolbar = [{ 'bold': true, 'italic': true, 'link': true }, { 'header': true }, { 'ordered_list': true, 'bullet_list': true, 'blockquote': true }, { 'align': true }, { 'video': true, 'divider': true }, { 'undo': true, 'redo': true, 'clean': true, 'showcode': true }];
+
 	function makeEditor(textarea) {
-	  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+	  var editorTools = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultToolbar;
 
 	  var os = "win";
 	  var editorId = parseInt(Math.random() * 10000);
+	  var options = {
+	    modules: {
+	      toolbar: {
+	        handlers: {}
+	      }
+	    }
+	  };
 
 	  // Add check for os - used to show tooltip shortcuts
 	  if (/Linux/i.test(navigator.platform)) os = "lin";
@@ -135,196 +132,90 @@
 	  textarea.style.display = "none";
 
 	  // Create tooltips for editor
-	  options.tooltips = options.tooltips || {};
-	  options.tooltips.bold = (0, _utils.addTooltip)(options, "bold", 'Toggle bold style', os, "(ctrl+b)", "(cmd+b)");
-	  options.tooltips.italic = (0, _utils.addTooltip)(options, "italic", 'Toggle emphasis', os, "(ctrl+i)", "(cmd+i)");
-	  options.tooltips.link = (0, _utils.addTooltip)(options, "link", 'Add / edit link', os, "(ctrl+k)", "(cmd+k)");
-	  options.tooltips.header = (0, _utils.addTooltip)(options, "header", 'Select header type');
-	  options.tooltips.list_ordered = (0, _utils.addTooltip)(options, "list_ordered", 'Wrap in ordered list');
-	  options.tooltips.list_bullet = (0, _utils.addTooltip)(options, "list_bullet", 'Wrap in bullet list');
-	  options.tooltips.blockquote = (0, _utils.addTooltip)(options, "blockquote", 'Wrap in block quote');
-	  options.tooltips.align = (0, _utils.addTooltip)(options, "align", 'Select alignment');
-	  options.tooltips.video = (0, _utils.addTooltip)(options, "video", 'Insert video');
-	  options.tooltips.divider = (0, _utils.addTooltip)(options, "divider", 'Insert divider');
-	  options.tooltips.undo = (0, _utils.addTooltip)(options, "undo", 'Undo', os, "(ctrl+z)", "(cmd+z)");
-	  options.tooltips.redo = (0, _utils.addTooltip)(options, "redo", 'Redo', os, "(ctrl+shift+z)", "(cmd+shift+z)", "(ctrl+y)");
-	  options.tooltips.clean = (0, _utils.addTooltip)(options, "clean", 'Remove all formatting on selected text');
-	  options.tooltips.showcode = (0, _utils.addTooltip)(options, "showcode", 'Toggle code view');
-
-	  toolbarElement.innerHTML = options.toolbar_items ||
-	  // Add simple formatting buttons
-	  '<span class="ql-formats">' + (0, _utils.addButton)(options, "bold") + (0, _utils.addButton)(options, "italic") + (0, _utils.addButton)(options, "link", { disabled: true }) + '</span>' +
-	  // Add header dropdown
-	  '<span class="ql-formats">' + (0, _utils.addSelect)(options, "header", [1, 2, 3, null]) + '</span>' +
-	  // Add list buttons
-	  '<span class="ql-formats">' + (0, _utils.addButton)(options, "list", { value: "ordered" }) + (0, _utils.addButton)(options, "list", { value: "bullet" }) + (0, _utils.addButton)(options, "blockquote") + '</span>' +
-	  // Add alignment button
-	  '<span class="ql-formats">' + (0, _utils.addSelect)(options, "align", [null, 'center', 'right']) + '</span>' +
-	  // Add image, pictures and hr tags
-	  '<span class="ql-formats">' + (0, _utils.addButton)(options, "video") + (0, _utils.addButton)(options, "divider") + '</span>' +
-	  // Add undo / redo / clean / showcode buttons
-	  '<span class="ql-formats">' + (0, _utils.addButton)(options, "undo", { disabled: true }) + (0, _utils.addButton)(options, "redo", { disabled: true }) + (0, _utils.addButton)(options, "clean") + (0, _utils.addButton)(options, "showcode") + '</span>';
+	  toolbarElement.innerHTML = (0, _utils.createToolbar)(editorTools, os);
 
 	  // Add our default toolbar
-	  options.modules = options.modules || {};
-	  options.modules.toolbar = options.modules.toolbar || {};
-	  options.modules.toolbar.container = options.modules.toolbar.container || "#" + toolbarElement.id;
+	  options.modules.toolbar.container = "#" + toolbarElement.id;
 
-	  // Add the toolbar module handlers
-	  options.modules.toolbar.handlers = options.modules.toolbar.handlers || {
-	    clean: function clean() {
-	      var _this = this;
+	  // Make sure only our custom formats are used
+	  options.formats = [
+	  // Add attributes that we want to be able to parse (used on images and video links)
+	  'alt', 'height', 'width', 'image'];
+	  var _iteratorNormalCompletion = true;
+	  var _didIteratorError = false;
+	  var _iteratorError = undefined;
 
-	      var range = this.quill.getSelection();
-	      if (range == null) return;
-	      if (range.length == 0) {
-	        var formats = this.quill.getFormat();
-	        Object.keys(formats).forEach(function (name) {
-	          // Clean functionality in existing apps only clean inline formats
-	          if (_parchment2.default.query(name, _parchment2.default.Scope.INLINE) != null) {
-	            _this.quill.format(name, false);
-	          }
-	        });
-	      } else {
-	        var contents = this.quill.getContents(range);
-	        var start_index = range.index;
+	  try {
+	    for (var _iterator = editorTools[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	      var item = _step.value;
+	      var _iteratorNormalCompletion3 = true;
+	      var _didIteratorError3 = false;
+	      var _iteratorError3 = undefined;
 
-	        var _iteratorNormalCompletion = true;
-	        var _didIteratorError = false;
-	        var _iteratorError = undefined;
+	      try {
+	        for (var _iterator3 = Object.keys(item)[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+	          var key = _step3.value;
 
+	          if (['ordered_list', 'bullet_list'].indexOf(key) != -1) key = 'list';
+
+	          if (options.formats.indexOf(key) == -1) options.formats.push(key);
+	        }
+	      } catch (err) {
+	        _didIteratorError3 = true;
+	        _iteratorError3 = err;
+	      } finally {
 	        try {
-	          for (var _iterator = contents.ops[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-	            var selection = _step.value;
-
-	            // Check for images and videos - don't clear them - just clear the attributes
-	            if (selection.insert && selection.insert instanceof Object) {
-	              var _contents = this.quill.getContents(start_index, 1);
-	              var diff = void 0;
-	              if (selection.insert.image) {
-	                // If selection is image - remove attributes
-	                diff = _contents.diff(new _quillDelta2.default([{
-	                  insert: {
-	                    image: selection.insert.image
-	                  },
-	                  attributes: {}
-	                }]));
-	              }
-
-	              if (selection.insert.video) {
-	                // If selection is video - set default attributes
-	                diff = _contents.diff(new _quillDelta2.default([{
-	                  insert: {
-	                    video: selection.insert.video
-	                  },
-	                  attributes: {
-	                    width: _promote_video.DEFAULT_ATTRIBUTES['width'],
-	                    height: _promote_video.DEFAULT_ATTRIBUTES['height']
-	                  }
-	                }]));
-	              }
-
-	              if (diff) {
-	                // Apply diff delta if there is any
-	                var delta = new _quillDelta2.default().retain(start_index).concat(diff);
-	                this.quill.editor.applyDelta(delta);
-	              }
-
-	              // Both images and videos only add 1 to the index returned by the selection item.
-	              start_index += 1;
-	            } else {
-	              var selection_length = selection.insert.length;
-	              // If the selection ends with \n, we should remove the \n.
-	              if (selection.insert.endsWith('\n')) this.quill.removeFormat(start_index, selection_length - 1, _quill2.default.sources.USER);else this.quill.removeFormat(start_index, selection_length, _quill2.default.sources.USER);
-	              start_index += selection_length;
-	            }
+	          if (!_iteratorNormalCompletion3 && _iterator3.return) {
+	            _iterator3.return();
 	          }
-	        } catch (err) {
-	          _didIteratorError = true;
-	          _iteratorError = err;
 	        } finally {
-	          try {
-	            if (!_iteratorNormalCompletion && _iterator.return) {
-	              _iterator.return();
-	            }
-	          } finally {
-	            if (_didIteratorError) {
-	              throw _iteratorError;
-	            }
+	          if (_didIteratorError3) {
+	            throw _iteratorError3;
 	          }
 	        }
 	      }
-	    },
-	    divider: function divider() {
-	      if (!this.container.classList.contains("disabled")) {
-	        var range = editor.getSelection(true);
-	        editor.insertText(range.index, '\n', _quill2.default.sources.USER);
-	        editor.insertEmbed(range.index + 1, 'divider', true, _quill2.default.sources.USER);
-	        editor.setSelection(range.index + 2, _quill2.default.sources.SILENT);
+	    }
+	  } catch (err) {
+	    _didIteratorError = true;
+	    _iteratorError = err;
+	  } finally {
+	    try {
+	      if (!_iteratorNormalCompletion && _iterator.return) {
+	        _iterator.return();
 	      }
-	    },
-	    link: function link(value) {
-	      if (value) {
-	        var range = this.quill.getSelection();
-	        if (range == null || range.length == 0) return;
-	        var tooltip = this.quill.theme.tooltip;
-	        tooltip.edit('link');
-	      } else {
-	        this.quill.format('link', false);
-	      }
-	    },
-	    undo: function undo() {
-	      var undo_btn = this.container.getElementsByClassName("ql-undo")[0];
-	      if (!undo_btn.classList.contains("disabled") && !this.container.classList.contains("disabled")) {
-	        this.container.getElementsByClassName("ql-redo")[0].classList.remove("disabled");
-	        this.quill.history.undo();
-	        if (this.quill.history.stack.undo.length == 0) undo_btn.classList.add("disabled");
-	      }
-	    },
-	    redo: function redo() {
-	      var redo_btn = this.container.getElementsByClassName("ql-redo")[0];
-	      if (!redo_btn.classList.contains("disabled") && !this.container.classList.contains("disabled")) {
-	        var _undo_btn = this.container.getElementsByClassName("ql-undo")[0];
-
-	        this.quill.history.redo();
-	        if (this.quill.history.stack.redo.length == 0) redo_btn.classList.add("disabled");
-
-	        _undo_btn.classList.remove("disabled");
-	      }
-	    },
-	    showcode: function showcode() {
-	      var editorContainer = this.quill.container;
-
-	      if (textarea.style.display == 'none') {
-	        var qlEditorElement = editorContainer.firstChild;
-	        var editorHtml = qlEditorElement.innerHTML;
-	        textarea.style.width = qlEditorElement.clientWidth + "px";
-	        textarea.style.height = qlEditorElement.clientHeight + "px";
-	        editorContainer.style.display = 'none';
-	        textarea.style.display = 'block';
-	        this.container.classList.add("disabled");
-	        this.quill.disable();
-	        textarea.value = (0, _htmlBeautify2.default)(editorHtml);
-	      } else {
-	        (0, _utils.updateEditorContents)(editor, textarea);
-	        this.quill.enable();
-	        textarea.style.display = 'none';
-	        editorContainer.style.display = 'block';
-	        this.container.classList.remove("disabled");
+	    } finally {
+	      if (_didIteratorError) {
+	        throw _iteratorError;
 	      }
 	    }
-	  };
+	  }
 
-	  // Make sure only our custom formats are used
-	  options.formats = options.formats || [
-	  // Add default quilljs formats we want
-	  'align', 'blockquote', 'bold', 'divider', 'header', 'italic', 'image', 'link', 'list', 'video',
+	  var _iteratorNormalCompletion2 = true;
+	  var _didIteratorError2 = false;
+	  var _iteratorError2 = undefined;
 
-	  // Add attributes that we want to be able to parse as well (used on images and video links)
-	  'alt', 'height', 'width'];
+	  try {
+	    for (var _iterator2 = options.formats[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+	      var format = _step2.value;
+
+	      if (Object.keys(_handlers.defaultHandlers).indexOf(format) != -1) options.modules.toolbar.handlers[format] = _handlers.defaultHandlers[format];
+	    }
+	  } catch (err) {
+	    _didIteratorError2 = true;
+	    _iteratorError2 = err;
+	  } finally {
+	    try {
+	      if (!_iteratorNormalCompletion2 && _iterator2.return) {
+	        _iterator2.return();
+	      }
+	    } finally {
+	      if (_didIteratorError2) {
+	        throw _iteratorError2;
+	      }
+	    }
+	  }
 
 	  options.theme = 'snow';
-	  options.debug = false;
 
 	  // Create editor in the newly created element with the correct options
 	  var editor = new _quill2.default(editorElement, options);
@@ -332,6 +223,8 @@
 	  // Add current textarea value
 	  (0, _utils.updateEditorContents)(editor, textarea);
 	  editor.history.clear();
+
+	  editor.textarea = textarea;
 
 	  // Set default text for link placeholder
 	  editorElement.getElementsByClassName("ql-tooltip")[0].getElementsByTagName('input')[0].setAttribute('data-link', "Embed link");
@@ -16167,38 +16060,88 @@
 	  value: true
 	});
 	exports.updateEditorContents = updateEditorContents;
-	exports.addTooltip = addTooltip;
-	exports.addButton = addButton;
-	exports.addSelect = addSelect;
+	exports.createToolbar = createToolbar;
 	function updateEditorContents(editor, textarea) {
 	  editor.clipboard.dangerouslyPasteHTML(textarea.value);
 	}
 
-	function addTooltip(options, name, defaultString, os, defaultKeyBinding, macKeyBinding, winKeyBinding) {
-	  var returnString = options.tooltips[name] || defaultString;
-
-	  if (os) {
-	    var keyBinding = defaultKeyBinding;
-	    if (os == 'mac') keyBinding = macKeyBinding;
-
-	    if (os == 'win' && winKeyBinding) keyBinding = winKeyBinding;
-
-	    returnString += " " + keyBinding;
+	var defaultTooltips = {
+	  bold: {
+	    defaultText: 'Toggle bold style',
+	    defaultKeys: {
+	      win: '(ctrl+b)',
+	      lin: '(ctrl+b)',
+	      mac: '(cmd+b)'
+	    }
+	  },
+	  italic: {
+	    defaultText: 'Toggle emphasis',
+	    defaultKeys: {
+	      win: '(ctrl+i)',
+	      lin: '(ctrl+i)',
+	      mac: '(cmd+i)'
+	    }
+	  },
+	  link: {
+	    defaultText: 'Add / edit link',
+	    defaultKeys: {
+	      win: '(ctrl+k)',
+	      lin: '(ctrl+k)',
+	      mac: '(cmd+k)'
+	    }
+	  },
+	  header: {
+	    defaultText: 'Select header type'
+	  },
+	  ordered_list: {
+	    defaultText: 'Wrap in ordered list'
+	  },
+	  bullet_list: {
+	    defaultText: 'Wrap in bullet list'
+	  },
+	  blockquote: {
+	    defaultText: 'Wrap in block quote'
+	  },
+	  align: {
+	    defaultText: 'Select alignment'
+	  },
+	  video: {
+	    defaultText: 'Insert video'
+	  },
+	  divider: {
+	    defaultText: 'Insert divider'
+	  },
+	  undo: {
+	    defaultText: 'Undo',
+	    defaultKeys: {
+	      win: '(ctrl+z)',
+	      lin: '(ctrl+z)',
+	      mac: '(cmd+z)'
+	    }
+	  },
+	  redo: {
+	    defaultText: 'Redo',
+	    defaultKeys: {
+	      win: '(ctrl+y)',
+	      lin: '(ctrl+shift+z)',
+	      mac: '(cmd+shift+z)'
+	    }
+	  },
+	  clean: {
+	    defaultText: 'Remove all formatting on selected text'
+	  },
+	  showcode: {
+	    defaultText: 'Toggle code view'
 	  }
-
-	  return returnString;
-	}
-
-	function addButton(options, name) {
+	};
+	function addButton(tooltip, name) {
 	  var button_options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-	  var tooltip_name = name + (button_options.value ? "_" + button_options.value : "");
-
-	  return '<button class="ql-' + name + (button_options.disabled ? ' disabled' : '') + '" type="button" title="' + options.tooltips[tooltip_name] + '"' + (button_options.value ? ' value="' + button_options.value + '"' : '') + '></button>';
+	  return '<button class="ql-' + name + (button_options.disabled ? ' disabled' : '') + '" type="button" title="' + tooltip + '"' + (button_options.value ? ' value="' + button_options.value + '"' : '') + '></button>';
 	}
 
-	function addSelect(options, name, select_options) {
-	  var html = '<select class="ql-' + name + '" title="' + options.tooltips[name] + '">';
+	function addSelect(tooltip, name, select_options) {
+	  var html = '<select class="ql-' + name + '" title="' + tooltip + '">';
 	  for (var i = 0; i < select_options.length; i++) {
 	    var option = select_options[i];
 	    if (select_options[i]) html += '<option value="' + select_options[i] + '"></option>';else html += '<option selected></option>';
@@ -16206,6 +16149,99 @@
 	  html += '</select>';
 
 	  return html;
+	}
+
+	function addButtons(toolsMap, os) {
+	  var html = "";
+
+	  var _iteratorNormalCompletion = true;
+	  var _didIteratorError = false;
+	  var _iteratorError = undefined;
+
+	  try {
+	    for (var _iterator = Object.keys(toolsMap)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	      var name = _step.value;
+
+	      var options = void 0;
+	      var tooltip = typeof toolsMap[name] == "string" ? toolsMap[name] : defaultTooltips[name].defaultText;
+
+	      if (defaultTooltips[name].defaultKeys) tooltip += " " + defaultTooltips[name].defaultKeys[os];
+
+	      if (['link', 'redo', 'undo'].indexOf(name) != -1) {
+	        options = { disabled: true };
+	        html += addButton(tooltip, name, options);
+	      } else switch (name) {
+	        case 'align':
+	          options = [null, 'center', 'right'];
+	          html += addSelect(tooltip, name, options);
+	          break;
+	        case 'header':
+	          options = [1, 2, 3, null];
+	          html += addSelect(tooltip, name, options);
+	          break;
+	        case 'ordered_list':
+	          name = 'list';
+	          options = { value: "ordered" };
+	          html += addButton(tooltip, name, options);
+	          break;
+	        case 'bullet_list':
+	          name = 'list';
+	          options = { value: "bullet" };
+	          html += addButton(tooltip, name, options);
+	          break;
+	        default:
+	          html += addButton(tooltip, name, {});
+	      }
+	    }
+	  } catch (err) {
+	    _didIteratorError = true;
+	    _iteratorError = err;
+	  } finally {
+	    try {
+	      if (!_iteratorNormalCompletion && _iterator.return) {
+	        _iterator.return();
+	      }
+	    } finally {
+	      if (_didIteratorError) {
+	        throw _iteratorError;
+	      }
+	    }
+	  }
+
+	  return html;
+	}
+
+	function createToolbar(editorTools, os) {
+	  var toolbarHtml = "";
+
+	  var _iteratorNormalCompletion2 = true;
+	  var _didIteratorError2 = false;
+	  var _iteratorError2 = undefined;
+
+	  try {
+	    for (var _iterator2 = editorTools[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+	      var item = _step2.value;
+
+	      toolbarHtml += '<span class="ql-formats">';
+	      toolbarHtml += addButtons(item, os);
+	      toolbarHtml += '</span>';
+	    }
+	  } catch (err) {
+	    _didIteratorError2 = true;
+	    _iteratorError2 = err;
+	  } finally {
+	    try {
+	      if (!_iteratorNormalCompletion2 && _iterator2.return) {
+	        _iterator2.return();
+	      }
+	    } finally {
+	      if (_didIteratorError2) {
+	        throw _iteratorError2;
+	      }
+	    }
+	  }
+
+	  return toolbarHtml;
 	}
 
 /***/ },
@@ -16907,28 +16943,184 @@
 
 
 /***/ },
-/* 29 */
-/***/ function(module, exports) {
+/* 29 */,
+/* 30 */
+/***/ function(module, exports, __webpack_require__) {
 
-	if (typeof Function.prototype.bind != 'function') {
-	    Function.prototype.bind = function bind(obj) {
-	        var args = Array.prototype.slice.call(arguments, 1),
-	            self = this,
-	            nop = function() {
-	            },
-	            bound = function() {
-	                return self.apply(
-	                    this instanceof nop ? this : (obj || {}), args.concat(
-	                        Array.prototype.slice.call(arguments)
-	                    )
-	                );
-	            };
-	        nop.prototype = this.prototype || {};
-	        bound.prototype = new nop();
-	        return bound;
-	    };
-	}
+	"use strict";
 
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.defaultHandlers = undefined;
+
+	var _quill = __webpack_require__(2);
+
+	var _quill2 = _interopRequireDefault(_quill);
+
+	var _parchment = __webpack_require__(7);
+
+	var _parchment2 = _interopRequireDefault(_parchment);
+
+	var _quillDelta = __webpack_require__(8);
+
+	var _quillDelta2 = _interopRequireDefault(_quillDelta);
+
+	var _promote_video = __webpack_require__(16);
+
+	var _htmlBeautify = __webpack_require__(18);
+
+	var _htmlBeautify2 = _interopRequireDefault(_htmlBeautify);
+
+	var _utils = __webpack_require__(17);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var defaultHandlers = exports.defaultHandlers = {
+	  clean: function clean() {
+	    var _this = this;
+
+	    var range = this.quill.getSelection();
+	    if (range == null) return;
+	    if (range.length == 0) {
+	      var formats = this.quill.getFormat();
+	      Object.keys(formats).forEach(function (name) {
+	        // Clean functionality in existing apps only clean inline formats
+	        if (_parchment2.default.query(name, _parchment2.default.Scope.INLINE) != null) {
+	          _this.quill.format(name, false);
+	        }
+	      });
+	    } else {
+	      var contents = this.quill.getContents(range);
+	      var start_index = range.index;
+
+	      var _iteratorNormalCompletion = true;
+	      var _didIteratorError = false;
+	      var _iteratorError = undefined;
+
+	      try {
+	        for (var _iterator = contents.ops[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	          var selection = _step.value;
+
+	          // Check for images and videos - don't clear them - just clear the attributes
+	          if (selection.insert && selection.insert instanceof Object) {
+	            var _contents = this.quill.getContents(start_index, 1);
+	            var diff = void 0;
+	            if (selection.insert.image) {
+	              // If selection is image - remove attributes
+	              diff = _contents.diff(new _quillDelta2.default([{
+	                insert: {
+	                  image: selection.insert.image
+	                },
+	                attributes: {}
+	              }]));
+	            }
+
+	            if (selection.insert.video) {
+	              // If selection is video - set default attributes
+	              diff = _contents.diff(new _quillDelta2.default([{
+	                insert: {
+	                  video: selection.insert.video
+	                },
+	                attributes: {
+	                  width: _promote_video.DEFAULT_ATTRIBUTES['width'],
+	                  height: _promote_video.DEFAULT_ATTRIBUTES['height']
+	                }
+	              }]));
+	            }
+
+	            if (diff) {
+	              // Apply diff delta if there is any
+	              var delta = new _quillDelta2.default().retain(start_index).concat(diff);
+	              this.quill.editor.applyDelta(delta);
+	            }
+
+	            // Both images and videos only add 1 to the index returned by the selection item.
+	            start_index += 1;
+	          } else {
+	            var selection_length = selection.insert.length;
+	            // If the selection ends with \n, we should remove the \n.
+	            if (selection.insert.endsWith('\n')) this.quill.removeFormat(start_index, selection_length - 1, _quill2.default.sources.USER);else this.quill.removeFormat(start_index, selection_length, _quill2.default.sources.USER);
+	            start_index += selection_length;
+	          }
+	        }
+	      } catch (err) {
+	        _didIteratorError = true;
+	        _iteratorError = err;
+	      } finally {
+	        try {
+	          if (!_iteratorNormalCompletion && _iterator.return) {
+	            _iterator.return();
+	          }
+	        } finally {
+	          if (_didIteratorError) {
+	            throw _iteratorError;
+	          }
+	        }
+	      }
+	    }
+	  },
+	  divider: function divider() {
+	    if (!this.container.classList.contains("disabled")) {
+	      var range = editor.getSelection(true);
+	      editor.insertText(range.index, '\n', _quill2.default.sources.USER);
+	      editor.insertEmbed(range.index + 1, 'divider', true, _quill2.default.sources.USER);
+	      editor.setSelection(range.index + 2, _quill2.default.sources.SILENT);
+	    }
+	  },
+	  link: function link(value) {
+	    if (value) {
+	      var range = this.quill.getSelection();
+	      if (range == null || range.length == 0) return;
+	      var tooltip = this.quill.theme.tooltip;
+	      tooltip.edit('link');
+	    } else {
+	      this.quill.format('link', false);
+	    }
+	  },
+	  undo: function undo() {
+	    var undo_btn = this.container.getElementsByClassName("ql-undo")[0];
+	    if (!undo_btn.classList.contains("disabled") && !this.container.classList.contains("disabled")) {
+	      this.container.getElementsByClassName("ql-redo")[0].classList.remove("disabled");
+	      this.quill.history.undo();
+	      if (this.quill.history.stack.undo.length == 0) undo_btn.classList.add("disabled");
+	    }
+	  },
+	  redo: function redo() {
+	    var redo_btn = this.container.getElementsByClassName("ql-redo")[0];
+	    if (!redo_btn.classList.contains("disabled") && !this.container.classList.contains("disabled")) {
+	      var undo_btn = this.container.getElementsByClassName("ql-undo")[0];
+
+	      this.quill.history.redo();
+	      if (this.quill.history.stack.redo.length == 0) redo_btn.classList.add("disabled");
+
+	      undo_btn.classList.remove("disabled");
+	    }
+	  },
+	  showcode: function showcode() {
+	    var editor = this.quill;
+	    var editorContainer = editor.container;
+	    var textarea = editor.textarea;
+
+	    if (textarea.style.display == 'none') {
+	      var qlEditorElement = editorContainer.firstChild;
+	      var editorHtml = qlEditorElement.innerHTML;
+	      textarea.style.width = qlEditorElement.clientWidth + "px";
+	      textarea.style.height = qlEditorElement.clientHeight + "px";
+	      editorContainer.style.display = 'none';
+	      textarea.style.display = 'block';
+	      this.container.classList.add("disabled");
+	      this.quill.disable();
+	      textarea.value = (0, _htmlBeautify2.default)(editorHtml);
+	    } else {
+	      (0, _utils.updateEditorContents)(editor, textarea);
+	      this.quill.enable();
+	      textarea.style.display = 'none';
+	      editorContainer.style.display = 'block';
+	      this.container.classList.remove("disabled");
+	    }
+	  }
+	};
 
 /***/ }
 /******/ ]);

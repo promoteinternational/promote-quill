@@ -1,2 +1,1 @@
-var options = {};
-window.editor = makeEditor(document.querySelector("#content"), options);
+window.editor = makeEditor(document.querySelector("#content"));
