@@ -1,6 +1,6 @@
 /*!
  * (C) Copyright Promote International AB
- * Promote editor version: 0.6.0
+ * Promote editor version: 0.6.1
  */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -100,15 +100,15 @@
 	var defaultToolbar = [{ 'bold': true, 'italic': true, 'link': true }, { 'header': true }, { 'ordered_list': true, 'bullet_list': true, 'blockquote': true }, { 'align': true }, { 'video': true, 'divider': true }, { 'undo': true, 'redo': true, 'clean': true, 'showcode': true }];
 
 	function makeEditor(textarea) {
-	  var editorTools = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultToolbar;
+	  var editorOptions = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+	  var editorTools = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : defaultToolbar;
 
 	  var os = "win";
 	  var editorId = parseInt(Math.random() * 10000);
-	  var options = {
-	    modules: {
-	      toolbar: {
-	        handlers: {}
-	      }
+	  var options = editorOptions;
+	  options.modules = {
+	    toolbar: {
+	      handlers: {}
 	    }
 	  };
 
@@ -16609,6 +16609,7 @@
 	    defaultText: 'Toggle code view'
 	  }
 	};
+
 	function addButton(tooltip, name) {
 	  var button_options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
