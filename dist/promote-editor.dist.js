@@ -1,6 +1,6 @@
 /*!
  * (C) Copyright Promote International AB
- * Promote editor version: 0.6.1
+ * Promote editor version: 0.6.2
  */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -145,76 +145,16 @@
 	  options.formats = [
 	  // Add attributes that we want to be able to parse (used on images and video links)
 	  'alt', 'height', 'width', 'image'];
-	  var _iteratorNormalCompletion = true;
-	  var _didIteratorError = false;
-	  var _iteratorError = undefined;
 
-	  try {
-	    for (var _iterator = editorTools[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-	      var item = _step.value;
-	      var _iteratorNormalCompletion3 = true;
-	      var _didIteratorError3 = false;
-	      var _iteratorError3 = undefined;
+	  for (var i = 0; i < editorTools.length; i++) {
+	    var itemKeys = Object.keys(editorTools[i]);
+	    for (var keyIndex = 0; keyIndex < itemKeys.length; keyIndex++) {
+	      var key = itemKeys[keyIndex];
+	      if (['ordered_list', 'bullet_list'].indexOf(key) != -1) key = 'list';
 
-	      try {
-	        for (var _iterator3 = Object.keys(item)[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-	          var key = _step3.value;
-
-	          if (['ordered_list', 'bullet_list'].indexOf(key) != -1) key = 'list';
-
-	          if (options.formats.indexOf(key) == -1) options.formats.push(key);
-	        }
-	      } catch (err) {
-	        _didIteratorError3 = true;
-	        _iteratorError3 = err;
-	      } finally {
-	        try {
-	          if (!_iteratorNormalCompletion3 && _iterator3.return) {
-	            _iterator3.return();
-	          }
-	        } finally {
-	          if (_didIteratorError3) {
-	            throw _iteratorError3;
-	          }
-	        }
-	      }
-	    }
-	  } catch (err) {
-	    _didIteratorError = true;
-	    _iteratorError = err;
-	  } finally {
-	    try {
-	      if (!_iteratorNormalCompletion && _iterator.return) {
-	        _iterator.return();
-	      }
-	    } finally {
-	      if (_didIteratorError) {
-	        throw _iteratorError;
-	      }
-	    }
-	  }
-
-	  var _iteratorNormalCompletion2 = true;
-	  var _didIteratorError2 = false;
-	  var _iteratorError2 = undefined;
-
-	  try {
-	    for (var _iterator2 = options.formats[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-	      var format = _step2.value;
-
-	      if (Object.keys(_handlers.defaultHandlers).indexOf(format) != -1) options.modules.toolbar.handlers[format] = _handlers.defaultHandlers[format];
-	    }
-	  } catch (err) {
-	    _didIteratorError2 = true;
-	    _iteratorError2 = err;
-	  } finally {
-	    try {
-	      if (!_iteratorNormalCompletion2 && _iterator2.return) {
-	        _iterator2.return();
-	      }
-	    } finally {
-	      if (_didIteratorError2) {
-	        throw _iteratorError2;
+	      if (options.formats.indexOf(key) == -1) {
+	        options.formats.push(key);
+	        if (Object.keys(_handlers.defaultHandlers).indexOf(key) != -1) options.modules.toolbar.handlers[key] = _handlers.defaultHandlers[key];
 	      }
 	    }
 	  }
@@ -13132,68 +13072,49 @@
 	      var contents = this.quill.getContents(range);
 	      var start_index = range.index;
 
-	      var _iteratorNormalCompletion = true;
-	      var _didIteratorError = false;
-	      var _iteratorError = undefined;
+	      for (var i = 0; i < contents.ops.length; i++) {
+	        var selection = contents.ops[i];
 
-	      try {
-	        for (var _iterator = contents.ops[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-	          var selection = _step.value;
-
-	          // Check for images and videos - don't clear them - just clear the attributes
-	          if (selection.insert && selection.insert instanceof Object) {
-	            var _contents = this.quill.getContents(start_index, 1);
-	            var diff = void 0;
-	            if (selection.insert.image) {
-	              // If selection is image - remove attributes
-	              diff = _contents.diff(new _quillDelta2.default([{
-	                insert: {
-	                  image: selection.insert.image
-	                },
-	                attributes: {}
-	              }]));
-	            }
-
-	            if (selection.insert.video) {
-	              // If selection is video - set default attributes
-	              diff = _contents.diff(new _quillDelta2.default([{
-	                insert: {
-	                  video: selection.insert.video
-	                },
-	                attributes: {
-	                  width: _promote_video.DEFAULT_ATTRIBUTES['width'],
-	                  height: _promote_video.DEFAULT_ATTRIBUTES['height']
-	                }
-	              }]));
-	            }
-
-	            if (diff) {
-	              // Apply diff delta if there is any
-	              var delta = new _quillDelta2.default().retain(start_index).concat(diff);
-	              this.quill.editor.applyDelta(delta);
-	            }
-
-	            // Both images and videos only add 1 to the index returned by the selection item.
-	            start_index += 1;
-	          } else {
-	            var selection_length = selection.insert.length;
-	            // If the selection ends with \n, we should remove the \n.
-	            if (selection.insert.endsWith('\n')) this.quill.removeFormat(start_index, selection_length - 1, _quill2.default.sources.USER);else this.quill.removeFormat(start_index, selection_length, _quill2.default.sources.USER);
-	            start_index += selection_length;
+	        // Check for images and videos - don't clear them - just clear the attributes
+	        if (selection.insert && selection.insert instanceof Object) {
+	          var _contents = this.quill.getContents(start_index, 1);
+	          var diff = void 0;
+	          if (selection.insert.image) {
+	            // If selection is image - remove attributes
+	            diff = _contents.diff(new _quillDelta2.default([{
+	              insert: {
+	                image: selection.insert.image
+	              },
+	              attributes: {}
+	            }]));
 	          }
-	        }
-	      } catch (err) {
-	        _didIteratorError = true;
-	        _iteratorError = err;
-	      } finally {
-	        try {
-	          if (!_iteratorNormalCompletion && _iterator.return) {
-	            _iterator.return();
+
+	          if (selection.insert.video) {
+	            // If selection is video - set default attributes
+	            diff = _contents.diff(new _quillDelta2.default([{
+	              insert: {
+	                video: selection.insert.video
+	              },
+	              attributes: {
+	                width: _promote_video.DEFAULT_ATTRIBUTES['width'],
+	                height: _promote_video.DEFAULT_ATTRIBUTES['height']
+	              }
+	            }]));
 	          }
-	        } finally {
-	          if (_didIteratorError) {
-	            throw _iteratorError;
+
+	          if (diff) {
+	            // Apply diff delta if there is any
+	            var delta = new _quillDelta2.default().retain(start_index).concat(diff);
+	            this.quill.editor.applyDelta(delta);
 	          }
+
+	          // Both images and videos only add 1 to the index returned by the selection item.
+	          start_index += 1;
+	        } else {
+	          var selection_length = selection.insert.length;
+	          // If the selection ends with \n, we should remove the \n.
+	          if (selection.insert.endsWith('\n')) this.quill.removeFormat(start_index, selection_length - 1, _quill2.default.sources.USER);else this.quill.removeFormat(start_index, selection_length, _quill2.default.sources.USER);
+	          start_index += selection_length;
 	        }
 	      }
 	    }
@@ -16629,58 +16550,39 @@
 
 	function addButtons(toolsMap, os) {
 	  var html = "";
+	  var toolsMapKeys = Object.keys(toolsMap);
 
-	  var _iteratorNormalCompletion = true;
-	  var _didIteratorError = false;
-	  var _iteratorError = undefined;
+	  for (var i = 0; i < toolsMapKeys.length; i++) {
+	    var name = toolsMapKeys[i];
+	    var options = void 0;
+	    var tooltip = typeof toolsMap[name] == "string" ? toolsMap[name] : defaultTooltips[name].defaultText;
 
-	  try {
-	    for (var _iterator = Object.keys(toolsMap)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-	      var name = _step.value;
+	    if (defaultTooltips[name].defaultKeys) tooltip += " " + defaultTooltips[name].defaultKeys[os];
 
-	      var options = void 0;
-	      var tooltip = typeof toolsMap[name] == "string" ? toolsMap[name] : defaultTooltips[name].defaultText;
-
-	      if (defaultTooltips[name].defaultKeys) tooltip += " " + defaultTooltips[name].defaultKeys[os];
-
-	      if (['link', 'redo', 'undo'].indexOf(name) != -1) {
-	        options = { disabled: true };
+	    if (['link', 'redo', 'undo'].indexOf(name) != -1) {
+	      options = { disabled: true };
+	      html += addButton(tooltip, name, options);
+	    } else switch (name) {
+	      case 'align':
+	        options = [null, 'center', 'right'];
+	        html += addSelect(tooltip, name, options);
+	        break;
+	      case 'header':
+	        options = [1, 2, 3, null];
+	        html += addSelect(tooltip, name, options);
+	        break;
+	      case 'ordered_list':
+	        name = 'list';
+	        options = { value: "ordered" };
 	        html += addButton(tooltip, name, options);
-	      } else switch (name) {
-	        case 'align':
-	          options = [null, 'center', 'right'];
-	          html += addSelect(tooltip, name, options);
-	          break;
-	        case 'header':
-	          options = [1, 2, 3, null];
-	          html += addSelect(tooltip, name, options);
-	          break;
-	        case 'ordered_list':
-	          name = 'list';
-	          options = { value: "ordered" };
-	          html += addButton(tooltip, name, options);
-	          break;
-	        case 'bullet_list':
-	          name = 'list';
-	          options = { value: "bullet" };
-	          html += addButton(tooltip, name, options);
-	          break;
-	        default:
-	          html += addButton(tooltip, name, {});
-	      }
-	    }
-	  } catch (err) {
-	    _didIteratorError = true;
-	    _iteratorError = err;
-	  } finally {
-	    try {
-	      if (!_iteratorNormalCompletion && _iterator.return) {
-	        _iterator.return();
-	      }
-	    } finally {
-	      if (_didIteratorError) {
-	        throw _iteratorError;
-	      }
+	        break;
+	      case 'bullet_list':
+	        name = 'list';
+	        options = { value: "bullet" };
+	        html += addButton(tooltip, name, options);
+	        break;
+	      default:
+	        html += addButton(tooltip, name, {});
 	    }
 	  }
 
@@ -16690,31 +16592,10 @@
 	function createToolbar(editorTools, os) {
 	  var toolbarHtml = "";
 
-	  var _iteratorNormalCompletion2 = true;
-	  var _didIteratorError2 = false;
-	  var _iteratorError2 = undefined;
-
-	  try {
-	    for (var _iterator2 = editorTools[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-	      var item = _step2.value;
-
-	      toolbarHtml += '<span class="ql-formats">';
-	      toolbarHtml += addButtons(item, os);
-	      toolbarHtml += '</span>';
-	    }
-	  } catch (err) {
-	    _didIteratorError2 = true;
-	    _iteratorError2 = err;
-	  } finally {
-	    try {
-	      if (!_iteratorNormalCompletion2 && _iterator2.return) {
-	        _iterator2.return();
-	      }
-	    } finally {
-	      if (_didIteratorError2) {
-	        throw _iteratorError2;
-	      }
-	    }
+	  for (var i = 0; i < editorTools.length; i++) {
+	    toolbarHtml += '<span class="ql-formats">';
+	    toolbarHtml += addButtons(editorTools[i], os);
+	    toolbarHtml += '</span>';
 	  }
 
 	  return toolbarHtml;
