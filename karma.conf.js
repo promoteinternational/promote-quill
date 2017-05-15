@@ -12,10 +12,10 @@ module.exports = function (config) {
       require('karma-webpack'),
     ],
     files: [
-      { pattern: './test/test_utils.js', watched: false }
+      { pattern: './test/*.js', watched: false }
     ],
     preprocessors: {
-      './test/test_utils.js': ['webpack']
+      './test/*.js': ['webpack']
     },
     coverageIstanbulReporter: {
       reports: [ 'html', 'lcovonly' ],
@@ -34,7 +34,7 @@ module.exports = function (config) {
     webpack: {
       module: {
         loaders: [
-          { test: /\.js$/, exclude: /node_modules/, loader: 'babel?presets[]=es2015' }
+          { test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader?presets[]=es2015' }
         ]
       },
       watch: false
