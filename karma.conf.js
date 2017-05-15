@@ -12,7 +12,7 @@ module.exports = function (config) {
       require('karma-webpack'),
     ],
     files: [
-      { pattern: './test/*.js', watched: false }
+      { pattern: './test/test_*.js', watched: false }
     ],
     preprocessors: {
       './test/*.js': ['webpack']
@@ -32,9 +32,23 @@ module.exports = function (config) {
     browsers: ['PhantomJS'],
     singleRun: true,
     webpack: {
+
       module: {
         loaders: [
-          { test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader?presets[]=es2015' }
+          {
+            test: /\.js$/,
+            loader: "babel-loader",
+            exclude: [ /node_modules/ ],
+            query: { presets: ["es2015"] }
+          },
+          {
+            test: /\.css$/,
+            loader: "style-loader!css-loader"
+          },
+          {
+            test: /\.svg$/,
+            loader: 'svg-inline-loader'
+          }
         ]
       },
       watch: false
