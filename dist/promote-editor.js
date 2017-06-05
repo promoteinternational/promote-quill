@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 29);
+/******/ 	return __webpack_require__(__webpack_require__.s = 27);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -11360,15 +11360,15 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // Add custom icons
 var icons = _quill2.default.import('ui/icons');
 icons['divider'] = '&minus;'; // TODO: Update to fa minus?
-icons['showcode'] = __webpack_require__(25);
-icons['undo'] = __webpack_require__(27);
-icons['redo'] = __webpack_require__(26);
+icons['showcode'] = __webpack_require__(23);
+icons['undo'] = __webpack_require__(25);
+icons['redo'] = __webpack_require__(24);
 
 // Add default quill css
-__webpack_require__(24);
+__webpack_require__(22);
 
 // Add custom promote editor css
-__webpack_require__(23);
+__webpack_require__(21);
 
 // Add custom hr tag and custom video settings
 _quill2.default.register({
@@ -11528,19 +11528,15 @@ var _quill = __webpack_require__(0);
 
 var _quill2 = _interopRequireDefault(_quill);
 
-var _parchment = __webpack_require__(20);
+var _parchment = __webpack_require__(18);
 
 var _parchment2 = _interopRequireDefault(_parchment);
 
-var _quillDelta = __webpack_require__(21);
+var _quillDelta = __webpack_require__(19);
 
 var _quillDelta2 = _interopRequireDefault(_quillDelta);
 
 var _promote_video = __webpack_require__(1);
-
-var _htmlBeautify = __webpack_require__(16);
-
-var _htmlBeautify2 = _interopRequireDefault(_htmlBeautify);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -11660,7 +11656,7 @@ var defaultHandlers = {
       textarea.style.display = 'block';
       this.container.classList.add("disabled");
       this.quill.disable();
-      textarea.value = (0, _htmlBeautify2.default)(editorHtml);
+      textarea.value = editorHtml;
     } else {
       updateEditorContents(editor, textarea);
       this.quill.enable();
@@ -11974,8 +11970,8 @@ function fromByteArray (uint8) {
 
 
 var base64 = __webpack_require__(9)
-var ieee754 = __webpack_require__(18)
-var isArray = __webpack_require__(19)
+var ieee754 = __webpack_require__(16)
+var isArray = __webpack_require__(17)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -13753,7 +13749,7 @@ function isnan (val) {
   return val !== val // eslint-disable-line no-self-compare
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(28)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(26)))
 
 /***/ }),
 /* 11 */
@@ -14530,300 +14526,6 @@ function merge_tuples (diffs, start, length) {
 
 /***/ }),
 /* 16 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _htmlBeautify = __webpack_require__(17);
-
-var _htmlBeautify2 = _interopRequireDefault(_htmlBeautify);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-exports.default = _htmlBeautify2.default;
-module.exports = exports['default'];
-
-/***/ }),
-/* 17 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-exports.default = function (html) {
-  try {
-    return beautify(html);
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-var SPACE = '   ';
-
-var NEW_LINE = '\n';
-
-var SINGLETON_TAGS = ['meta', 'link', 'area', 'base', 'col', 'command', 'embeded', 'source', 'link'];
-
-var INLINE_TAGS = ['b', 'big', 'i', 'small', 'tt', 'abbr', 'acronym', 'cite', 'dfn', 'em', 'kbd', 'strong', 'samp', 'time', 'var', 'a', 'bdo', 'br', 'br', 'img', 'map', 'object', 'q', 'script', 'span', 'sub', 'sup', 'button', 'label', 'input', 'select', 'textarea', 'param', 'hr'];
-
-var isNotEmptyString = function isNotEmptyString(string) {
-  return (/\S/.test(string)
-  );
-};
-
-var trimFirstSpaces = function trimFirstSpaces(string) {
-  return string.replace(/^\s+/g, '');
-};
-
-var addLevelTag = function addLevelTag(levelTags, tagName) {
-  return [].concat(_toConsumableArray(levelTags), [tagName]);
-};
-
-var deleteLevelTag = function deleteLevelTag(levelTags, tagName) {
-  return levelTags.filter(function (levelTag) {
-    return levelTag != tagName;
-  });
-};
-
-var getNodeType = function getNodeType(str) {
-  if (str.slice(0, 4) == '<!--') return 'comment';
-  return str[0] == '<' && str[str.length - 1] == '>' ? 'tag' : 'text';
-};
-
-var getTagType = function getTagType(str) {
-  if (str[1] == '/') return 'closed';
-  if (str.slice(-2) == '/>') return 'single';
-  return 'opened';
-};
-
-var getFormattedNode = function getFormattedNode(_ref) {
-  var node = _ref.node,
-      spaceCount = _ref.spaceCount,
-      newLine = _ref.newLine;
-
-  if (spaceCount < 0) spaceCount = 0;
-  return NEW_LINE.repeat(newLine + 0) + SPACE.repeat(spaceCount) + node;
-};
-
-var getTagName = function getTagName(str, type) {
-  var tag = false;
-  switch (type) {
-    case 'closed':
-      tag = str.slice(2, -1);
-      break;
-    case 'opened':
-      tag = str.slice(1, -1);
-      break;
-    case 'single':
-      tag = str.slice(1, -2);
-      break;
-  }
-  return tag.split(' ')[0];
-};
-
-var getTagInfo = function getTagInfo(_ref2) {
-  var node = _ref2.node,
-      nodeType = _ref2.nodeType,
-      _ref2$inlineTags = _ref2.inlineTags,
-      inlineTags = _ref2$inlineTags === undefined ? INLINE_TAGS : _ref2$inlineTags;
-
-  if (nodeType != 'tag') return {};
-  var tagType = getTagType(node);
-  var tagName = getTagName(node, tagType);
-  var tagIsInline = INLINE_TAGS.indexOf(tagName) > -1 ? true : false;
-  return { tagType: tagType, tagName: tagName, tagIsInline: tagIsInline };
-};
-
-var isNewLineNode = function isNewLineNode(_ref3) {
-  var nodeType = _ref3.nodeType,
-      previousNodeType = _ref3.previousNodeType,
-      previousTagIsInline = _ref3.previousTagIsInline,
-      previousTagType = _ref3.previousTagType,
-      tagInfo = _ref3.tagInfo;
-  var tagIsInline = tagInfo.tagIsInline,
-      tagType = tagInfo.tagType;
-
-  if (nodeType == 'comment') {
-    return true;
-  }
-
-  if (tagType == 'opened' && !tagIsInline && previousNodeType != false) return true;
-
-  if (tagType == 'closed' && !tagIsInline && (previousTagIsInline || previousNodeType != 'tag' || previousTagType == 'closed' && !previousTagIsInline)) return true;
-
-  if (tagIsInline && nodeType == 'tag' && (previousNodeType == 'tag' && !previousTagIsInline || previousNodeType == 'comment')) return true;
-
-  if (nodeType == 'text' && ['tag', 'comment'].indexOf(previousNodeType) > -1 && !previousTagIsInline) return true;
-
-  return false;
-};
-
-var getNewLineSpacesCount = function getNewLineSpacesCount(_ref4) {
-  var nodeType = _ref4.nodeType,
-      tagInfo = _ref4.tagInfo,
-      tagIsInline = _ref4.tagIsInline,
-      previousNodeType = _ref4.previousNodeType,
-      previousTagIsInline = _ref4.previousTagIsInline,
-      previousTagType = _ref4.previousTagType,
-      level = _ref4.level;
-
-  if (nodeType == 'tag') {
-    var _tagIsInline = tagInfo.tagIsInline,
-        tagType = tagInfo.tagType;
-
-
-    if (_tagIsInline && (previousNodeType == 'tag' && previousTagIsInline == false || previousNodeType == 'comment')) return level + 1;
-
-    if (_tagIsInline && previousNodeType == 'text' || _tagIsInline && previousNodeType == 'tag' && previousTagIsInline) return 0;
-
-    if (tagType == 'closed' && previousNodeType == 'tag' && !previousTagIsInline) return 0;
-
-    return level;
-  }
-  if (nodeType == 'text') {
-    if (['tag', 'comment'].indexOf(previousNodeType) > -1 && !previousTagIsInline && previousTagType == 'opened') {
-      return level + 1;
-    } else {
-      return 0;
-    }
-  }
-  if (nodeType == 'comment') {
-    if (previousNodeType == false) {
-      return level;
-    } else {
-      return level + 1;
-    }
-  }
-};
-
-var beautify = function beautify(html) {
-
-  var beautified = '';
-
-  var node = '';
-  var level = 0;
-  var lines = [];
-  var levelTags = [];
-  var previousNodeType = '';
-  var previousTagIsInline = false;
-  var previousTagType = false;
-
-  var symbols = html.split('');
-  var index = 0;
-  var _iteratorNormalCompletion = true;
-  var _didIteratorError = false;
-  var _iteratorError = undefined;
-
-  try {
-    for (var _iterator = symbols[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-      var symbol = _step.value;
-
-      node += symbol;
-
-      var previousSymbol = index > 0 ? symbols[index - 1] : false;
-
-      var nextSymbol = symbols.length - 1 != index ? symbols[index + 1] : false;
-
-      if (html.length == index + 1 || nextSymbol == '<' || symbol == '>') {
-        node = node.replace(/\n/g, '');
-
-        var nodeType = getNodeType(node);
-
-        var tagInfo = getTagInfo({ node: node, nodeType: nodeType });
-
-        if (nodeType == 'tag' && SINGLETON_TAGS.indexOf(tagInfo.tagName) == -1) {
-          var tagIsInline = tagInfo.tagIsInline,
-              tagType = tagInfo.tagType,
-              tagName = tagInfo.tagName;
-
-          if (!tagIsInline && tagType == 'opened') levelTags = addLevelTag(levelTags, tagName);
-          level = levelTags.length - 1;
-          if (!tagIsInline && tagType == 'closed') levelTags = deleteLevelTag(levelTags, tagName);
-        }
-
-        if (previousNodeType == 'tag' && !previousTagIsInline) if (tagInfo.tagIsInline || nodeType == 'text') node = trimFirstSpaces(node);
-
-        var newLine = isNewLineNode({
-          nodeType: nodeType,
-          tagInfo: tagInfo,
-          previousNodeType: previousNodeType,
-          previousTagIsInline: previousTagIsInline,
-          previousTagType: previousTagType
-        });
-
-        var spaceCount = getNewLineSpacesCount({
-          level: level,
-          nodeType: nodeType,
-          tagInfo: tagInfo,
-          previousNodeType: previousNodeType,
-          previousTagIsInline: previousTagIsInline,
-          previousTagType: previousTagType
-        });
-
-        var nodeInfo = _extends({
-          level: level,
-          node: node,
-          nodeType: nodeType,
-          newLine: newLine,
-          spaceCount: spaceCount,
-          previousTagType: previousTagType,
-          previousTagIsInline: previousTagIsInline,
-          previousNodeType: previousNodeType
-        }, tagInfo);
-
-        if (isNotEmptyString(node)) {
-          beautified += getFormattedNode({
-            node: node,
-            spaceCount: nodeInfo.spaceCount,
-            newLine: nodeInfo.newLine
-          });
-        }
-
-        if (isNotEmptyString(node)) {
-          previousNodeType = nodeType;
-          if (nodeType == 'tag') {
-            previousTagType = nodeInfo.tagType;
-            previousTagIsInline = nodeInfo.tagIsInline;
-          }
-        }
-        node = '';
-      }
-      index++;
-    }
-  } catch (err) {
-    _didIteratorError = true;
-    _iteratorError = err;
-  } finally {
-    try {
-      if (!_iteratorNormalCompletion && _iterator.return) {
-        _iterator.return();
-      }
-    } finally {
-      if (_didIteratorError) {
-        throw _iteratorError;
-      }
-    }
-  }
-
-  return beautified;
-};
-module.exports = exports['default'];
-
-/***/ }),
-/* 18 */
 /***/ (function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -14913,7 +14615,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 
 /***/ }),
-/* 19 */
+/* 17 */
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -14924,7 +14626,7 @@ module.exports = Array.isArray || function (arr) {
 
 
 /***/ }),
-/* 20 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -16499,13 +16201,13 @@ return /******/ (function(modules) { // webpackBootstrap
 //# sourceMappingURL=parchment.js.map
 
 /***/ }),
-/* 21 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var diff = __webpack_require__(15);
 var equal = __webpack_require__(3);
 var extend = __webpack_require__(4);
-var op = __webpack_require__(22);
+var op = __webpack_require__(20);
 
 
 var NULL_CHARACTER = String.fromCharCode(0);  // Placeholder char for embed in diff()
@@ -16815,7 +16517,7 @@ module.exports = Delta;
 
 
 /***/ }),
-/* 22 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var equal = __webpack_require__(3);
@@ -16960,7 +16662,7 @@ module.exports = lib;
 
 
 /***/ }),
-/* 23 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
@@ -16986,7 +16688,7 @@ if(false) {
 }
 
 /***/ }),
-/* 24 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
@@ -17012,25 +16714,25 @@ if(false) {
 }
 
 /***/ }),
-/* 25 */
+/* 23 */
 /***/ (function(module, exports) {
 
 module.exports = "<svg viewbox=\"0 0 18 18\"><polyline class=\"ql-even ql-stroke\" points=\"5 7 3 9 5 11\"></polyline><polyline class=\"ql-even ql-stroke\" points=\"13 7 15 9 13 11\"></polyline><line class=\"ql-stroke\" x1=\"10\" x2=\"8\" y1=\"5\" y2=\"13\"></line></svg>"
 
 /***/ }),
-/* 26 */
+/* 24 */
 /***/ (function(module, exports) {
 
 module.exports = "<svg viewbox=\"0 0 18 18\"><polygon class=\"ql-fill ql-stroke\" points=\"12 10 14 12 16 10 12 10\"></polygon><path class=\"ql-stroke\" d=\"M9.91,13.91A4.6,4.6,0,0,1,9,14a5,5,0,1,1,5-5\"></path></svg>"
 
 /***/ }),
-/* 27 */
+/* 25 */
 /***/ (function(module, exports) {
 
 module.exports = "<svg viewbox=\"0 0 18 18\"><polygon class=\"ql-fill ql-stroke\" points=\"6 10 4 12 2 10 6 10\"></polygon><path class=\"ql-stroke\" d=\"M8.09,13.91A4.6,4.6,0,0,0,9,14,5,5,0,1,0,4,9\"></path></svg>"
 
 /***/ }),
-/* 28 */
+/* 26 */
 /***/ (function(module, exports) {
 
 var g;
@@ -17057,7 +16759,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 29 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(6);

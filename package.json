@@ -20,7 +20,6 @@
   },
   "homepage": "https://github.com/avidity/promote-quill#readme",
   "dependencies": {
-    "html-beautify": "1.0.4",
     "parchment": "1.0.8",
     "quill": "1.2.0",
     "quill-delta": "3.4.3"
