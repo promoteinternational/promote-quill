@@ -11819,8 +11819,10 @@ function addFormatsAndHandlers(options, editorTools) {
   // Make sure only our custom formats are used
   options.formats = [
   // Add attributes that we want to be able to parse (used on images and video links)
-  'alt', 'height', 'width', 'image'];
+  // and other formats not used by toolbar buttons
+  'alt', 'height', 'width', 'image', 'indent'];
 
+  // Add formats for all buttons
   for (var i = 0; i < editorTools.length; i++) {
     var itemKeys = Object.keys(editorTools[i]);
     for (var keyIndex = 0; keyIndex < itemKeys.length; keyIndex++) {
@@ -13764,7 +13766,7 @@ exports = module.exports = __webpack_require__(2)();
 
 
 // module
-exports.push([module.i, ".ql-snow .ql-picker.ql-header {\n    border: 1px solid #ccc;\n}\n\n.ql-editor {\n    min-height: 400px;\n    max-height: 800px;\n}\n\n.disabled button {\n    color: #ccc;\n}\n\n.disabled .ql-stroke, button:hover.disabled .ql-stroke {\n    stroke: #ccc!important;\n}\n\n.disabled button:hover, button:hover.disabled, .disabled .ql-picker-label {\n    cursor: default;\n}\n\n.disabled .ql-fill, .disabled .ql-stroke.ql-fill, .disabled button:hover .ql-stroke.ql-fill, button:hover.disabled .ql-stroke.ql-fill {\n    fill: #ccc!important;\n}\n\n.disabled .ql-picker-label, .disabled .ql-picker-label.ql-active {\n    color: #ccc!important;\n}\n\n.disabled .ql-showcode .ql-fill, .disabled .ql-showcode .ql-stroke.ql-fill {\n    fill: #333!important;\n}\n\n.disabled .ql-showcode .ql-stroke {\n    stroke: #333!important;\n}\n\n.disabled button:hover.ql-showcode {\n    cursor: pointer;\n}\n\n.disabled button:hover.ql-showcode .ql-stroke.ql-fill {\n    fill: #06c!important;\n}\n\n.disabled button:hover.ql-showcode .ql-stroke {\n    stroke: #06c!important;\n}\n", ""]);
+exports.push([module.i, ".ql-snow .ql-picker.ql-header {\n    border: 1px solid #ccc;\n}\n\n.ql-editor {\n    min-height: 90px;\n    max-height: 800px;\n}\n\n.disabled button {\n    color: #ccc;\n}\n\n.disabled .ql-stroke, button:hover.disabled .ql-stroke {\n    stroke: #ccc!important;\n}\n\n.disabled button:hover, button:hover.disabled, .disabled .ql-picker-label {\n    cursor: default;\n}\n\n.disabled .ql-fill, .disabled .ql-stroke.ql-fill, .disabled button:hover .ql-stroke.ql-fill, button:hover.disabled .ql-stroke.ql-fill {\n    fill: #ccc!important;\n}\n\n.disabled .ql-picker-label, .disabled .ql-picker-label.ql-active {\n    color: #ccc!important;\n}\n\n.disabled .ql-showcode .ql-fill, .disabled .ql-showcode .ql-stroke.ql-fill {\n    fill: #333!important;\n}\n\n.disabled .ql-showcode .ql-stroke {\n    stroke: #333!important;\n}\n\n.disabled button:hover.ql-showcode {\n    cursor: pointer;\n}\n\n.disabled button:hover.ql-showcode .ql-stroke.ql-fill {\n    fill: #06c!important;\n}\n\n.disabled button:hover.ql-showcode .ql-stroke {\n    stroke: #06c!important;\n}\n", ""]);
 
 // exports
 
