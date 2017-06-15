@@ -11145,6 +11145,7 @@ var PromoteVideo = function (_Video) {
       var node = _get(PromoteVideo.__proto__ || Object.getPrototypeOf(PromoteVideo), 'create', this).call(this, value);
       node.setAttribute('height', DEFAULT_ATTRIBUTES['height']);
       node.setAttribute('width', DEFAULT_ATTRIBUTES['width']);
+      node.setAttribute('src', extractVideoUrl(node.getAttribute('src'))); // TODO: remove
       return node;
     }
   }, {
@@ -11168,6 +11169,19 @@ var PromoteVideo = function (_Video) {
 PromoteVideo.blotName = 'video';
 PromoteVideo.className = 'ql-video';
 PromoteVideo.tagName = 'IFRAME';
+
+// TODO: remove if/when upstream releases new version: https://github.com/quilljs/quill/pull/1517
+function extractVideoUrl(url) {
+  var match = url.match(/^(?:(https?):\/\/)?(?:(?:www|m)\.)?youtube\.com\/watch.*v=([a-zA-Z0-9_-]+)/) || url.match(/^(?:(https?):\/\/)?(?:(?:www|m)\.)?youtu\.be\/([a-zA-Z0-9_-]+)/);
+  if (match) {
+    return (match[1] || 'https') + '://www.youtube.com/embed/' + match[2] + '?showinfo=0';
+  }
+  if (match = url.match(/^(?:(https?):\/\/)?(?:www\.)?vimeo\.com\/(\d+)/)) {
+    // eslint-disable-line no-cond-assign
+    return (match[1] || 'https') + '://player.vimeo.com/video/' + match[2] + '/';
+  }
+  return url;
+}
 
 exports.DEFAULT_ATTRIBUTES = DEFAULT_ATTRIBUTES;
 exports.PromoteVideo = PromoteVideo;
