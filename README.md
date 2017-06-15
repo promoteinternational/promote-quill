@@ -21,12 +21,10 @@ $ npm test
 
 ## Bundling
 
-The bundled version is `dist/promote-editor.js`. To create a new version, run:
+To create a new version of `dist/promote-editor.js`,
+first bump version in `package.json`, then run:
+
 ``` bash
 $ npm run dist
 ```
 
-Bundle a production version - at the moment the only difference is that there is a comment with version at the top of the file. The output file is `dist/promote-editor.dist.js`:
-``` bash
-$ PROD_ENV=1 npm run dist
-```
