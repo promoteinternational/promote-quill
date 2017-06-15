@@ -5,14 +5,16 @@ Rich content editor based on [Quilljs](https://quilljs.com/).
 ## Dev setup
 
 1. Get nodejs - easily installed via [nvm](http://nvm.sh/).
-2. Install dev dependencies: `$ npm install --dev`
+2. Install dev dependencies: `$ npm install --only=dev`
+3. (semioptional) Install dos2unix, to convert line endings after bundling.
 
 ## Running the demo for dev/debugging
 
-1. Start the webserver: `$ npm run dev`
-2. In another terminal tab (from the root dir): `$ npm run dist --watch` or if you want to run the production version: `$ PROD_ENV=1 npm run dist --watch`
+1. Start the webserver: `$ npm run dev` and navigate to [localhost:8080](http://localhost:8080)
+2. This will watch and autorecompile promote-editor.js, note that it serves it directly without writing to disk.
 
 ## Running tests
+
 ``` bash
 $ npm test
 ```

@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "webpack-dev-server --inline --content-base demo/",
     "dist": "webpack",
+    "postdist": "dos2unix dist/*",
     "test": "karma start"
   },
   "repository": {
