@@ -11150,6 +11150,7 @@ var PromoteVideo = function (_Video) {
       node.setAttribute('height', DEFAULT_ATTRIBUTES['height']);
       node.setAttribute('width', DEFAULT_ATTRIBUTES['width']);
       node.setAttribute('src', extractVideoUrl(node.getAttribute('src'))); // TODO: remove
+      node.setAttribute('src', ensureProtocol(node.getAttribute('src')));
       return node;
     }
   }, {
@@ -11173,6 +11174,10 @@ var PromoteVideo = function (_Video) {
 PromoteVideo.blotName = 'video';
 PromoteVideo.className = 'ql-video';
 PromoteVideo.tagName = 'IFRAME';
+
+function ensureProtocol(url) {
+  return url.indexOf('://') === -1 ? 'https://' + url : url;
+}
 
 // TODO: remove if/when upstream releases new version: https://github.com/quilljs/quill/pull/1517
 function extractVideoUrl(url) {
