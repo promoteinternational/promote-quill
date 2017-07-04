@@ -12032,6 +12032,7 @@ var defaultHandlers = {
     }
   },
   divider: function divider() {
+    var editor = this.quill;
     if (!this.container.classList.contains("disabled")) {
       var range = editor.getSelection(true);
       editor.insertText(range.index, '\n', _quill2.default.sources.USER);
