@@ -67,7 +67,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 27);
+/******/ 	return __webpack_require__(__webpack_require__.s = 28);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -11081,7 +11081,8 @@ module.exports = __webpack_require__(62);
 /***/ })
 /******/ ]);
 });
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10).Buffer))
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(11).Buffer))
 
 /***/ }),
 /* 1 */
@@ -11256,8 +11257,8 @@ module.exports = function() {
 /***/ (function(module, exports, __webpack_require__) {
 
 var pSlice = Array.prototype.slice;
-var objectKeys = __webpack_require__(14);
-var isArguments = __webpack_require__(13);
+var objectKeys = __webpack_require__(15);
+var isArguments = __webpack_require__(14);
 
 var deepEqual = module.exports = function (actual, expected, opts) {
   if (!opts) opts = {};
@@ -11718,27 +11719,30 @@ var _hr2 = _interopRequireDefault(_hr);
 
 var _promote_video = __webpack_require__(1);
 
-var _utils = __webpack_require__(8);
+var _promote_link = __webpack_require__(8);
+
+var _utils = __webpack_require__(9);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // Add custom icons
 var icons = _quill2.default.import('ui/icons');
 icons['divider'] = '&minus;'; // TODO: Update to fa minus?
-icons['showcode'] = __webpack_require__(23);
-icons['undo'] = __webpack_require__(25);
-icons['redo'] = __webpack_require__(24);
+icons['showcode'] = __webpack_require__(24);
+icons['undo'] = __webpack_require__(26);
+icons['redo'] = __webpack_require__(25);
 
 // Add default quill css
-__webpack_require__(22);
+__webpack_require__(23);
 
 // Add custom promote editor css
-__webpack_require__(21);
+__webpack_require__(22);
 
 // Add custom hr tag and custom video settings
 _quill2.default.register({
   'formats/divider': _hr2.default,
-  'formats/video': _promote_video.PromoteVideo
+  'formats/video': _promote_video.PromoteVideo,
+  'formats/link': _promote_link.PromoteLink
 }, true);
 
 var defaultToolbar = [{ 'bold': true, 'italic': true, 'link': true }, { 'header': true }, { 'ordered_list': true, 'bullet_list': true, 'blockquote': true }, { 'align': true }, { 'video': true, 'divider': true }, { 'undo': true, 'redo': true, 'clean': true, 'showcode': true }];
@@ -11882,6 +11886,63 @@ exports.default = Hr;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.PromoteLink = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+var _quill = __webpack_require__(0);
+
+var _quill2 = _interopRequireDefault(_quill);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Link = _quill2.default.import('formats/link');
+
+var PromoteLink = function (_Link) {
+  _inherits(PromoteLink, _Link);
+
+  function PromoteLink() {
+    _classCallCheck(this, PromoteLink);
+
+    return _possibleConstructorReturn(this, (PromoteLink.__proto__ || Object.getPrototypeOf(PromoteLink)).apply(this, arguments));
+  }
+
+  _createClass(PromoteLink, null, [{
+    key: 'create',
+    value: function create(value) {
+      var node = _get(PromoteLink.__proto__ || Object.getPrototypeOf(PromoteLink), 'create', this).call(this, value);
+      node.setAttribute('href', ensureProtocol(node.getAttribute('href')));
+      return node;
+    }
+  }]);
+
+  return PromoteLink;
+}(Link);
+
+function ensureProtocol(url) {
+  return url.indexOf('://') === -1 ? 'https://' + url : url;
+}
+
+exports.PromoteLink = PromoteLink;
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 exports.updateEditorContents = updateEditorContents;
 exports.addButton = addButton;
 exports.addSelect = addSelect;
@@ -11893,11 +11954,11 @@ var _quill = __webpack_require__(0);
 
 var _quill2 = _interopRequireDefault(_quill);
 
-var _parchment = __webpack_require__(18);
+var _parchment = __webpack_require__(19);
 
 var _parchment2 = _interopRequireDefault(_parchment);
 
-var _quillDelta = __webpack_require__(19);
+var _quillDelta = __webpack_require__(20);
 
 var _quillDelta2 = _interopRequireDefault(_quillDelta);
 
@@ -11971,6 +12032,7 @@ var defaultHandlers = {
     }
   },
   divider: function divider() {
+    var editor = this.quill;
     if (!this.container.classList.contains("disabled")) {
       var range = editor.getSelection(true);
       editor.insertText(range.index, '\n', _quill2.default.sources.USER);
@@ -12201,7 +12263,7 @@ function addFormatsAndHandlers(options, editorTools) {
 }
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12322,7 +12384,7 @@ function fromByteArray (uint8) {
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12336,9 +12398,9 @@ function fromByteArray (uint8) {
 
 
 
-var base64 = __webpack_require__(9)
-var ieee754 = __webpack_require__(16)
-var isArray = __webpack_require__(17)
+var base64 = __webpack_require__(10)
+var ieee754 = __webpack_require__(17)
+var isArray = __webpack_require__(18)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -14116,10 +14178,10 @@ function isnan (val) {
   return val !== val // eslint-disable-line no-self-compare
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(26)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(27)))
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)();
@@ -14127,13 +14189,13 @@ exports = module.exports = __webpack_require__(2)();
 
 
 // module
-exports.push([module.i, ".ql-snow .ql-picker.ql-header {\n    border: 1px solid #ccc;\n}\n\n.ql-editor {\n    min-height: 90px;\n    max-height: 800px;\n}\n\n.ql-tooltip[data-mode=\"video\"] {\n  top: 0 !important;\n  left: 0 !important;\n  margin-top: 0 !important;\n}\n\n.disabled button {\n    color: #ccc;\n}\n\n.disabled .ql-stroke, button:hover.disabled .ql-stroke {\n    stroke: #ccc!important;\n}\n\n.disabled button:hover, button:hover.disabled, .disabled .ql-picker-label {\n    cursor: default;\n}\n\n.disabled .ql-fill, .disabled .ql-stroke.ql-fill, .disabled button:hover .ql-stroke.ql-fill, button:hover.disabled .ql-stroke.ql-fill {\n    fill: #ccc!important;\n}\n\n.disabled .ql-picker-label, .disabled .ql-picker-label.ql-active {\n    color: #ccc!important;\n}\n\n.disabled .ql-showcode .ql-fill, .disabled .ql-showcode .ql-stroke.ql-fill {\n    fill: #333!important;\n}\n\n.disabled .ql-showcode .ql-stroke {\n    stroke: #333!important;\n}\n\n.disabled button:hover.ql-showcode {\n    cursor: pointer;\n}\n\n.disabled button:hover.ql-showcode .ql-stroke.ql-fill {\n    fill: #06c!important;\n}\n\n.disabled button:hover.ql-showcode .ql-stroke {\n    stroke: #06c!important;\n}\n", ""]);
+exports.push([module.i, ".ql-snow .ql-picker.ql-header {\n    border: 1px solid #ccc;\n}\n\n.ql-editor {\n    min-height: 90px;\n    max-height: 800px;\n}\n\n.ql-tooltip {\n  top: 0 !important;\n  left: 0 !important;\n  margin-top: 0 !important;\n}\n\n.disabled button {\n    color: #ccc;\n}\n\n.disabled .ql-stroke, button:hover.disabled .ql-stroke {\n    stroke: #ccc!important;\n}\n\n.disabled button:hover, button:hover.disabled, .disabled .ql-picker-label {\n    cursor: default;\n}\n\n.disabled .ql-fill, .disabled .ql-stroke.ql-fill, .disabled button:hover .ql-stroke.ql-fill, button:hover.disabled .ql-stroke.ql-fill {\n    fill: #ccc!important;\n}\n\n.disabled .ql-picker-label, .disabled .ql-picker-label.ql-active {\n    color: #ccc!important;\n}\n\n.disabled .ql-showcode .ql-fill, .disabled .ql-showcode .ql-stroke.ql-fill {\n    fill: #333!important;\n}\n\n.disabled .ql-showcode .ql-stroke {\n    stroke: #333!important;\n}\n\n.disabled button:hover.ql-showcode {\n    cursor: pointer;\n}\n\n.disabled button:hover.ql-showcode .ql-stroke.ql-fill {\n    fill: #06c!important;\n}\n\n.disabled button:hover.ql-showcode .ql-stroke {\n    stroke: #06c!important;\n}\n", ""]);
 
 // exports
 
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)();
@@ -14147,7 +14209,7 @@ exports.push([module.i, "/*!\n * Quill Editor v1.2.6\n * https://quilljs.com/\n 
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports) {
 
 var supportsArgumentsClass = (function(){
@@ -14173,7 +14235,7 @@ function unsupported(object){
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports) {
 
 exports = module.exports = typeof Object.keys === 'function'
@@ -14188,7 +14250,7 @@ function shim (obj) {
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports) {
 
 /**
@@ -14892,7 +14954,7 @@ function merge_tuples (diffs, start, length) {
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -14982,7 +15044,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -14993,7 +15055,7 @@ module.exports = Array.isArray || function (arr) {
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -16670,13 +16732,13 @@ module.exports = __webpack_require__(9);
 //# sourceMappingURL=parchment.js.map
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var diff = __webpack_require__(15);
+var diff = __webpack_require__(16);
 var equal = __webpack_require__(3);
 var extend = __webpack_require__(4);
-var op = __webpack_require__(20);
+var op = __webpack_require__(21);
 
 
 var NULL_CHARACTER = String.fromCharCode(0);  // Placeholder char for embed in diff()
@@ -16990,7 +17052,7 @@ module.exports = Delta;
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var equal = __webpack_require__(3);
@@ -17135,13 +17197,13 @@ module.exports = lib;
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(11);
+var content = __webpack_require__(12);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(5)(content, {});
@@ -17161,13 +17223,13 @@ if(false) {
 }
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(12);
+var content = __webpack_require__(13);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(5)(content, {});
@@ -17187,25 +17249,25 @@ if(false) {
 }
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports) {
 
 module.exports = "<svg viewbox=\"0 0 18 18\"><polyline class=\"ql-even ql-stroke\" points=\"5 7 3 9 5 11\"></polyline><polyline class=\"ql-even ql-stroke\" points=\"13 7 15 9 13 11\"></polyline><line class=\"ql-stroke\" x1=\"10\" x2=\"8\" y1=\"5\" y2=\"13\"></line></svg>"
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports) {
 
 module.exports = "<svg viewbox=\"0 0 18 18\"><polygon class=\"ql-fill ql-stroke\" points=\"12 10 14 12 16 10 12 10\"></polygon><path class=\"ql-stroke\" d=\"M9.91,13.91A4.6,4.6,0,0,1,9,14a5,5,0,1,1,5-5\"></path></svg>"
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports) {
 
 module.exports = "<svg viewbox=\"0 0 18 18\"><polygon class=\"ql-fill ql-stroke\" points=\"6 10 4 12 2 10 6 10\"></polygon><path class=\"ql-stroke\" d=\"M8.09,13.91A4.6,4.6,0,0,0,9,14,5,5,0,1,0,4,9\"></path></svg>"
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports) {
 
 var g;
@@ -17232,7 +17294,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(6);

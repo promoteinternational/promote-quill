@@ -7,7 +7,7 @@
     max-height: 800px;
 }
 
-.ql-tooltip[data-mode="video"] {
+.ql-tooltip {
   top: 0 !important;
   left: 0 !important;
   margin-top: 0 !important;
