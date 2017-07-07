@@ -1,6 +1,6 @@
 /*!
  * (C) Copyright Promote International AB
- * Promote editor version: 0.6.5
+ * Promote editor version: 0.6.6
  */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
