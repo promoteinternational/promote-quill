@@ -1,6 +1,6 @@
 /*!
  * (C) Copyright Promote International AB
- * Promote editor version: 0.6.6
+ * Promote editor version: 0.6.7
  */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -12096,7 +12096,7 @@ var defaultHandlers = {
 
 var defaultTooltips = {
   bold: {
-    defaultText: 'Toggle bold style',
+    defaultText: 'Bold',
     defaultKeys: {
       win: '(ctrl+b)',
       lin: '(ctrl+b)',
@@ -12104,7 +12104,7 @@ var defaultTooltips = {
     }
   },
   italic: {
-    defaultText: 'Toggle emphasis',
+    defaultText: 'Italic',
     defaultKeys: {
       win: '(ctrl+i)',
       lin: '(ctrl+i)',
@@ -12112,7 +12112,7 @@ var defaultTooltips = {
     }
   },
   link: {
-    defaultText: 'Add / edit link',
+    defaultText: 'Add link to selected text',
     defaultKeys: {
       win: '(ctrl+k)',
       lin: '(ctrl+k)',
@@ -12120,16 +12120,16 @@ var defaultTooltips = {
     }
   },
   header: {
-    defaultText: 'Select header type'
+    defaultText: 'Styles'
   },
   ordered_list: {
-    defaultText: 'Wrap in ordered list'
+    defaultText: 'Numbered list'
   },
   bullet_list: {
-    defaultText: 'Wrap in bullet list'
+    defaultText: 'Bullet list'
   },
   blockquote: {
-    defaultText: 'Wrap in block quote'
+    defaultText: 'Block quote'
   },
   align: {
     defaultText: 'Select alignment'
@@ -14189,7 +14189,7 @@ exports = module.exports = __webpack_require__(2)();
 
 
 // module
-exports.push([module.i, ".ql-snow .ql-picker.ql-header {\n    border: 1px solid #ccc;\n}\n\n.ql-editor {\n    min-height: 90px;\n    max-height: 800px;\n}\n\n.ql-tooltip {\n  top: 0 !important;\n  left: 0 !important;\n  margin-top: 0 !important;\n}\n\n.disabled button {\n    color: #ccc;\n}\n\n.disabled .ql-stroke, button:hover.disabled .ql-stroke {\n    stroke: #ccc!important;\n}\n\n.disabled button:hover, button:hover.disabled, .disabled .ql-picker-label {\n    cursor: default;\n}\n\n.disabled .ql-fill, .disabled .ql-stroke.ql-fill, .disabled button:hover .ql-stroke.ql-fill, button:hover.disabled .ql-stroke.ql-fill {\n    fill: #ccc!important;\n}\n\n.disabled .ql-picker-label, .disabled .ql-picker-label.ql-active {\n    color: #ccc!important;\n}\n\n.disabled .ql-showcode .ql-fill, .disabled .ql-showcode .ql-stroke.ql-fill {\n    fill: #333!important;\n}\n\n.disabled .ql-showcode .ql-stroke {\n    stroke: #333!important;\n}\n\n.disabled button:hover.ql-showcode {\n    cursor: pointer;\n}\n\n.disabled button:hover.ql-showcode .ql-stroke.ql-fill {\n    fill: #06c!important;\n}\n\n.disabled button:hover.ql-showcode .ql-stroke {\n    stroke: #06c!important;\n}\n", ""]);
+exports.push([module.i, ".ql-snow .ql-picker.ql-header {\n    border: 1px solid #ccc;\n}\n\n.ql-editor {\n    min-height: 90px;\n    max-height: 800px;\n}\n\n.ql-tooltip {\n  top: 0 !important;\n  left: 0 !important;\n  margin-top: 0 !important;\n}\n\n.disabled button {\n    color: #ccc;\n}\n\n.disabled .ql-stroke, button:hover.disabled .ql-stroke {\n    stroke: #ccc!important;\n}\n\n.disabled button:hover, button:hover.disabled, .disabled .ql-picker-label {\n    cursor: default;\n}\n\n.disabled .ql-fill, .disabled .ql-stroke.ql-fill, .disabled button:hover .ql-stroke.ql-fill, button:hover.disabled .ql-stroke.ql-fill {\n    fill: #ccc!important;\n}\n\n.disabled .ql-picker-label, .disabled .ql-picker-label.ql-active {\n    color: #ccc!important;\n}\n\n.disabled .ql-showcode .ql-fill, .disabled .ql-showcode .ql-stroke.ql-fill {\n    fill: #333!important;\n}\n\n.disabled .ql-showcode .ql-stroke {\n    stroke: #333!important;\n}\n\n.disabled button:hover.ql-showcode {\n    cursor: pointer;\n}\n\n.disabled button:hover.ql-showcode .ql-stroke.ql-fill {\n    fill: #06c!important;\n}\n\n.disabled button:hover.ql-showcode .ql-stroke {\n    stroke: #06c!important;\n}\n\n.ql-container.ql-snow .ql-tooltip[data-mode=link]::before {\n  content: \"Link:\"\n}\n\n.ql-container.ql-snow .ql-tooltip[data-mode=video]::before {\n  content: \"Video:\"\n}\n", ""]);
 
 // exports
 
