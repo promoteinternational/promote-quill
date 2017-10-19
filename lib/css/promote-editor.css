@@ -52,3 +52,11 @@
 .disabled button:hover.ql-showcode .ql-stroke {
     stroke: #06c!important;
 }
+
+.ql-container.ql-snow .ql-tooltip[data-mode=link]::before {
+  content: "Link:"
+}
+
+.ql-container.ql-snow .ql-tooltip[data-mode=video]::before {
+  content: "Video:"
+}
