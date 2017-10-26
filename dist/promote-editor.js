@@ -1,6 +1,6 @@
 /*!
  * (C) Copyright Promote International AB
- * Promote editor version: 0.6.7
+ * Promote editor version: 0.6.8
  */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -11112,7 +11112,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Video = _quill2.default.import('formats/video');
+var BlockEmbed = _quill2.default.import('blots/block/embed');
 
 // Set default values for the video iframe - used if no values are set or on creation.
 var DEFAULT_ATTRIBUTES = {
@@ -11120,8 +11120,8 @@ var DEFAULT_ATTRIBUTES = {
   'width': 500
 };
 
-var PromoteVideo = function (_Video) {
-  _inherits(PromoteVideo, _Video);
+var PromoteVideo = function (_BlockEmbed) {
+  _inherits(PromoteVideo, _BlockEmbed);
 
   function PromoteVideo() {
     _classCallCheck(this, PromoteVideo);
@@ -11135,9 +11135,9 @@ var PromoteVideo = function (_Video) {
       // Override default format method to set default size for height and width
       if (DEFAULT_ATTRIBUTES.hasOwnProperty(name)) {
         if (value) {
-          this.domNode.setAttribute(name, value);
+          this.domNode.firstChild.setAttribute(name, value);
         } else {
-          this.domNode.setAttribute(name, DEFAULT_ATTRIBUTES[name]);
+          this.domNode.firstChild.setAttribute(name, DEFAULT_ATTRIBUTES[name]);
         }
       } else {
         _get(PromoteVideo.prototype.__proto__ || Object.getPrototypeOf(PromoteVideo.prototype), 'format', this).call(this, name, value);
@@ -11148,10 +11148,13 @@ var PromoteVideo = function (_Video) {
     value: function create(value) {
       // Override create method - make sure default size is used.
       var node = _get(PromoteVideo.__proto__ || Object.getPrototypeOf(PromoteVideo), 'create', this).call(this, value);
-      node.setAttribute('height', DEFAULT_ATTRIBUTES['height']);
-      node.setAttribute('width', DEFAULT_ATTRIBUTES['width']);
-      node.setAttribute('src', extractVideoUrl(node.getAttribute('src'))); // TODO: remove
-      node.setAttribute('src', ensureProtocol(node.getAttribute('src')));
+      var iframe = document.createElement('iframe');
+      iframe.setAttribute('frameborder', '0');
+      iframe.setAttribute('allowfullscreen', true);
+      iframe.setAttribute('height', DEFAULT_ATTRIBUTES['height']);
+      iframe.setAttribute('width', DEFAULT_ATTRIBUTES['width']);
+      iframe.setAttribute('src', ensureProtocol(extractVideoUrl(value)));
+      node.appendChild(iframe);
       return node;
     }
   }, {
@@ -11159,22 +11162,27 @@ var PromoteVideo = function (_Video) {
     value: function formats(domNode) {
       // Override default formats static method to make sure that the default sizes are used on the video
       return Object.keys(DEFAULT_ATTRIBUTES).reduce(function (formats, attribute) {
-        if (domNode.hasAttribute(attribute)) {
-          formats[attribute] = domNode.getAttribute(attribute);
+        if (domNode.firstChild.hasAttribute(attribute)) {
+          formats[attribute] = domNode.firstChild.getAttribute(attribute);
         } else {
           formats[attribute] = DEFAULT_ATTRIBUTES[attribute];
         }
         return formats;
       }, {});
     }
+  }, {
+    key: 'value',
+    value: function value(domNode) {
+      return domNode.firstChild.getAttribute('src');
+    }
   }]);
 
   return PromoteVideo;
-}(Video);
+}(BlockEmbed);
 
 PromoteVideo.blotName = 'video';
 PromoteVideo.className = 'ql-video';
-PromoteVideo.tagName = 'IFRAME';
+PromoteVideo.tagName = 'DIV';
 
 function ensureProtocol(url) {
   return url.indexOf('://') === -1 ? 'https://' + url : url;
