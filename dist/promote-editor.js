@@ -1,6 +1,6 @@
 /*!
  * (C) Copyright Promote International AB
- * Promote editor version: 0.6.8
+ * Promote editor version: 0.6.9
  */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -12141,6 +12141,9 @@ var defaultTooltips = {
   },
   align: {
     defaultText: 'Select alignment'
+  },
+  image: {
+    defaultText: 'Insert image'
   },
   video: {
     defaultText: 'Insert video'
