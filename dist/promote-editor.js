@@ -12138,6 +12138,11 @@ function makeEditor(textarea) {
   // Add our default toolbar
   options.modules.toolbar.container = "#" + toolbarElement.id;
 
+  // Disable autoadding newlines
+  // The clipboard paste is used when loading the page,
+  // so new spacing would be added everytime (for example in front of lists)
+  options.modules.clipboard = { matchVisual: false };
+
   // Add default formats and handlers
   (0, _utils.addFormatsAndHandlers)(options, editorTools);
 
