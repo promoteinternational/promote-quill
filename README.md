@@ -5,7 +5,7 @@ Rich content editor based on [Quilljs](https://quilljs.com/).
 ## Dev setup
 
 1. Get nodejs - easily installed via [nvm](http://nvm.sh/).
-2. Install dev dependencies: `$ npm install --only=dev`
+2. Install dev dependencies: `$ npm install`
 3. (semioptional) Install dos2unix, to convert line endings after bundling.
 
 ## Running the demo for dev/debugging
