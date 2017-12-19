@@ -13794,7 +13794,7 @@ _quill2.default.register({
   'formats/image': _promote_image.PromoteImage
 }, true);
 
-var defaultToolbar = [{ 'bold': true, 'italic': true, 'link': true }, { 'header': true }, { 'ordered_list': true, 'bullet_list': true, 'blockquote': true }, { 'align': true }, { 'image': true, 'video': true, 'divider': true }, { 'undo': true, 'redo': true, 'clean': true, 'showcode': true }];
+var defaultToolbar = [{ 'bold': true, 'italic': true, 'link': true }, { 'header': true }, { 'ordered_list': true, 'bullet_list': true, 'blockquote': true }, { 'align': true }, { 'video': true, 'divider': true }, { 'undo': true, 'redo': true, 'clean': true, 'showcode': true }];
 
 function makeEditor(textarea) {
   var editorOptions = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
@@ -13803,13 +13803,13 @@ function makeEditor(textarea) {
   var os = "win";
   var editorId = parseInt(Math.random() * 10000);
   var options = editorOptions;
-  options.modules = {
-    toolbar: {
-      handlers: {
-        'image': _promote_image.PromoteImage.imageHandler
+  if (!options.modules) {
+    options.modules = {
+      toolbar: {
+        handlers: {}
       }
-    }
-  };
+    };
+  }
 
   // Add check for os - used to show tooltip shortcuts
   if (/Linux/i.test(navigator.platform)) os = "lin";
@@ -13889,6 +13889,7 @@ function makeEditor(textarea) {
 }
 
 window.makeEditor = makeEditor;
+window.PromoteImage = _promote_image.PromoteImage;
 
 /***/ }),
 /* 8 */
@@ -13965,7 +13966,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var Parchment = _quill2.default.import('parchment');
 
 
-var ATTRIBUTES = ['alt', 'height', 'width', 'srcset', 'sizes'];
+var ATTRIBUTES = ['alt', 'height', 'width', 'srcset', 'sizes', 'data-placeholder-id'];
 // TODO: tag with id of attachment?
 // desktop max-width: 700
 // iphone6+ max-width: 324
@@ -13994,10 +13995,17 @@ var PromoteImage = function (_Parchment$Embed) {
     }
   }], [{
     key: 'create',
-    value: function create(value) {
-      var node = _get(PromoteImage.__proto__ || Object.getPrototypeOf(PromoteImage), 'create', this).call(this, value);
-      if (typeof value === 'string') {
-        node.setAttribute('src', this.sanitize(value));
+    value: function create(_ref) {
+      var url = _ref.url,
+          placeholderId = _ref.placeholderId;
+
+      console.log('PromoteImage.create url', url, 'placeholderId', placeholderId);
+      var node = _get(PromoteImage.__proto__ || Object.getPrototypeOf(PromoteImage), 'create', this).call(this, url);
+      if (typeof url === 'string') {
+        node.setAttribute('src', this.sanitize(url));
+      }
+      if (placeholderId) {
+        node.setAttribute('data-placeholder-id', placeholderId);
       }
       return node;
     }
@@ -14027,32 +14035,29 @@ var PromoteImage = function (_Parchment$Embed) {
       return domNode.getAttribute('src');
     }
   }, {
-    key: 'imageHandler',
-    value: function imageHandler() {
-      // Insert placeholder image
-      // TODO: Read image before upload and use as placeholder?
-      var placeholderUrl = 'https://via.placeholder.com/350x150';
-      var range = this.quill.getSelection();
-      this.quill.insertEmbed(range.index, 'image', placeholderUrl);
+    key: 'generateImageHandler',
+    value: function generateImageHandler(triggerUpload) {
+      return function () {
+        console.log('imageHandler');
+        // Insert placeholder/progress image
+        var range = this.quill.getSelection();
+        var url = 'https://via.placeholder.com/350x150';
+        var placeholderId = parseInt(Math.random() * 100000);
+        this.quill.insertEmbed(range.index, 'image', { url: url, placeholderId: placeholderId });
 
-      // Listen to finished upload and update with real image
-      var fileInput = document.getElementsByClassName('js-attachment-editor-file')[0];
-      if (!fileInput) {
-        console.log('No js-attachment-file input found');
-        return false;
-      }
-      var self = this;
-      // FIXME: Don't add new listener every time...
-      fileInput.addEventListener('attachment.create', function (event) {
-        console.log('attachment.create', event);
-        if (event.detail.url) {
-          var _range = self.quill.getSelection();
-          self.quill.insertEmbed(_range.index, 'image', event.detail.url);
-        }
-      });
-
-      // Trigger upload
-      fileInput.click();
+        // Call trigger upload callback and send in onCreate callback to replace
+        // placeholder with uploaded image.
+        triggerUpload(function (url) {
+          console.log('triggerUpload url', url, 'placeholderId', placeholderId);
+          if (url) {
+            var node = document.querySelectorAll('img[data-placeholder-id="' + placeholderId + '"]')[0];
+            if (node) {
+              var blot = Parchment.find(node);
+              blot.replaceWith('image', { url: url });
+            }
+          }
+        });
+      };
     }
   }]);
 
