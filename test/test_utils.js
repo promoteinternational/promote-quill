@@ -9,16 +9,19 @@ describe('addButton', () => {
 
     expect(html).to.equal('<button class="ql-bold" type="button" title="This is a tooltip"></button>');
   });
+
   it('should return button with disabled class if option set', () => {
     const html = addButton("This is a tooltip", "bold", {disabled: true});
 
     expect(html).to.equal('<button class="ql-bold disabled" type="button" title="This is a tooltip"></button>')
   });
+
   it('should return button with value set if option set', () => {
     const html = addButton("This is a tooltip", "bold", {value: "false"});
 
     expect(html).to.equal('<button class="ql-bold" type="button" title="This is a tooltip" value="false"></button>');
   });
+
   it('should add disabled and value if both options set', () => {
     const html = addButton("This is a tooltip", "bold", {disabled: true, value: "false"});
 
@@ -45,13 +48,13 @@ describe('addButtons', () => {
     const html = addButtons({bold: true, italic: true, link: true, header: true, ordered_list: true, bullet_list: true, blockquote: true, align: true, video: true, divider:true, undo: true, redo: true, clean: true, showcode: true}, 'win');
 
     expect(html).to.equal(
-      '<button class="ql-bold" type="button" title="Toggle bold style (ctrl+b)"></button>' +
-      '<button class="ql-italic" type="button" title="Toggle emphasis (ctrl+i)"></button>' +
-      '<button class="ql-link disabled" type="button" title="Add / edit link (ctrl+k)"></button>' +
-      '<select class="ql-header" title="Select header type"><option value="1"></option><option value="2"></option><option value="3"></option><option selected></option></select>' +
-      '<button class="ql-list" type="button" title="Wrap in ordered list" value="ordered"></button>' +
-      '<button class="ql-list" type="button" title="Wrap in bullet list" value="bullet"></button>' +
-      '<button class="ql-blockquote" type="button" title="Wrap in block quote"></button>' +
+      '<button class="ql-bold" type="button" title="Bold (ctrl+b)"></button>' +
+      '<button class="ql-italic" type="button" title="Italic (ctrl+i)"></button>' +
+      '<button class="ql-link disabled" type="button" title="Add link to selected text (ctrl+k)"></button>' +
+      '<select class="ql-header" title="Styles"><option value="1"></option><option value="2"></option><option value="3"></option><option selected></option></select>' +
+      '<button class="ql-list" type="button" title="Numbered list" value="ordered"></button>' +
+      '<button class="ql-list" type="button" title="Bullet list" value="bullet"></button>' +
+      '<button class="ql-blockquote" type="button" title="Block quote"></button>' +
       '<select class="ql-align" title="Select alignment"><option selected></option><option value="center"></option><option value="right"></option></select>' +
       '<button class="ql-video" type="button" title="Insert video"></button>' +
       '<button class="ql-divider" type="button" title="Insert divider"></button>' +
@@ -61,17 +64,18 @@ describe('addButtons', () => {
       '<button class="ql-showcode" type="button" title="Toggle code view"></button>'
     );
   });
+
   it('should add defaults correctly - linux', () => {
     const html = addButtons({bold: true, italic: true, link: true, header: true, ordered_list: true, bullet_list: true, blockquote: true, align: true, video: true, divider:true, undo: true, redo: true, clean: true, showcode: true}, 'lin');
 
     expect(html).to.equal(
-      '<button class="ql-bold" type="button" title="Toggle bold style (ctrl+b)"></button>' +
-      '<button class="ql-italic" type="button" title="Toggle emphasis (ctrl+i)"></button>' +
-      '<button class="ql-link disabled" type="button" title="Add / edit link (ctrl+k)"></button>' +
-      '<select class="ql-header" title="Select header type"><option value="1"></option><option value="2"></option><option value="3"></option><option selected></option></select>' +
-      '<button class="ql-list" type="button" title="Wrap in ordered list" value="ordered"></button>' +
-      '<button class="ql-list" type="button" title="Wrap in bullet list" value="bullet"></button>' +
-      '<button class="ql-blockquote" type="button" title="Wrap in block quote"></button>' +
+      '<button class="ql-bold" type="button" title="Bold (ctrl+b)"></button>' +
+      '<button class="ql-italic" type="button" title="Italic (ctrl+i)"></button>' +
+      '<button class="ql-link disabled" type="button" title="Add link to selected text (ctrl+k)"></button>' +
+      '<select class="ql-header" title="Styles"><option value="1"></option><option value="2"></option><option value="3"></option><option selected></option></select>' +
+      '<button class="ql-list" type="button" title="Numbered list" value="ordered"></button>' +
+      '<button class="ql-list" type="button" title="Bullet list" value="bullet"></button>' +
+      '<button class="ql-blockquote" type="button" title="Block quote"></button>' +
       '<select class="ql-align" title="Select alignment"><option selected></option><option value="center"></option><option value="right"></option></select>' +
       '<button class="ql-video" type="button" title="Insert video"></button>' +
       '<button class="ql-divider" type="button" title="Insert divider"></button>' +
@@ -81,17 +85,18 @@ describe('addButtons', () => {
       '<button class="ql-showcode" type="button" title="Toggle code view"></button>'
     );
   });
+
   it('should add defaults correctly - mac', () => {
     const html = addButtons({bold: true, italic: true, link: true, header: true, ordered_list: true, bullet_list: true, blockquote: true, align: true, video: true, divider:true, undo: true, redo: true, clean: true, showcode: true}, 'mac');
 
     expect(html).to.equal(
-      '<button class="ql-bold" type="button" title="Toggle bold style (cmd+b)"></button>' +
-      '<button class="ql-italic" type="button" title="Toggle emphasis (cmd+i)"></button>' +
-      '<button class="ql-link disabled" type="button" title="Add / edit link (cmd+k)"></button>' +
-      '<select class="ql-header" title="Select header type"><option value="1"></option><option value="2"></option><option value="3"></option><option selected></option></select>' +
-      '<button class="ql-list" type="button" title="Wrap in ordered list" value="ordered"></button>' +
-      '<button class="ql-list" type="button" title="Wrap in bullet list" value="bullet"></button>' +
-      '<button class="ql-blockquote" type="button" title="Wrap in block quote"></button>' +
+      '<button class="ql-bold" type="button" title="Bold (cmd+b)"></button>' +
+      '<button class="ql-italic" type="button" title="Italic (cmd+i)"></button>' +
+      '<button class="ql-link disabled" type="button" title="Add link to selected text (cmd+k)"></button>' +
+      '<select class="ql-header" title="Styles"><option value="1"></option><option value="2"></option><option value="3"></option><option selected></option></select>' +
+      '<button class="ql-list" type="button" title="Numbered list" value="ordered"></button>' +
+      '<button class="ql-list" type="button" title="Bullet list" value="bullet"></button>' +
+      '<button class="ql-blockquote" type="button" title="Block quote"></button>' +
       '<select class="ql-align" title="Select alignment"><option selected></option><option value="center"></option><option value="right"></option></select>' +
       '<button class="ql-video" type="button" title="Insert video"></button>' +
       '<button class="ql-divider" type="button" title="Insert divider"></button>' +
@@ -117,20 +122,21 @@ describe('createToolbar', () => {
 
     expect(html).to.equal(
       '<span class="ql-formats">' +
-      '<button class="ql-bold" type="button" title="Toggle bold style (ctrl+b)"></button>' +
-      '<button class="ql-italic" type="button" title="Toggle emphasis (ctrl+i)"></button>' +
-      '<button class="ql-link disabled" type="button" title="Add / edit link (ctrl+k)"></button>' +
+      '<button class="ql-bold" type="button" title="Bold (ctrl+b)"></button>' +
+      '<button class="ql-italic" type="button" title="Italic (ctrl+i)"></button>' +
+      '<button class="ql-link disabled" type="button" title="Add link to selected text (ctrl+k)"></button>' +
       '</span>'
     )
   });
+
   it('should add two groups of buttons', () => {
     const html = createToolbar([{bold:true, italic: true, link: true}, {undo: true, redo: true, clean: true, showcode: true}], "lin");
 
     expect(html).to.equal(
       '<span class="ql-formats">' +
-      '<button class="ql-bold" type="button" title="Toggle bold style (ctrl+b)"></button>' +
-      '<button class="ql-italic" type="button" title="Toggle emphasis (ctrl+i)"></button>' +
-      '<button class="ql-link disabled" type="button" title="Add / edit link (ctrl+k)"></button>' +
+      '<button class="ql-bold" type="button" title="Bold (ctrl+b)"></button>' +
+      '<button class="ql-italic" type="button" title="Italic (ctrl+i)"></button>' +
+      '<button class="ql-link disabled" type="button" title="Add link to selected text (ctrl+k)"></button>' +
       '</span>' +
       '<span class="ql-formats">' +
       '<button class="ql-undo disabled" type="button" title="Undo (ctrl+z)"></button>' +
@@ -167,7 +173,7 @@ describe('addFormatsAndHandlers', () => {
     addFormatsAndHandlers(options, editorTools);
 
     expect(options.formats).to.eql(
-      ['alt', 'height', 'width', 'image']
+      ['alt', 'height', 'width', 'image', 'indent']
     );
     expect(options.modules.toolbar.handlers).to.eql({})
   });
