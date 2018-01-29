@@ -1,6 +1,6 @@
 /*!
  * (C) Copyright Promote International AB
- * Promote editor version: 0.6.11
+ * Promote editor version: 0.6.12
  */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -67,7 +67,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 28);
+/******/ 	return __webpack_require__(__webpack_require__.s = 29);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -11423,7 +11423,7 @@ module.exports = __webpack_require__(63);
 /***/ })
 /******/ ])["default"];
 });
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(11).Buffer))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12).Buffer))
 
 /***/ }),
 /* 1 */
@@ -11444,6 +11444,8 @@ var _get = function get(object, property, receiver) { if (object === null) objec
 var _quill = __webpack_require__(0);
 
 var _quill2 = _interopRequireDefault(_quill);
+
+var _link_parser = __webpack_require__(2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -11494,7 +11496,7 @@ var PromoteVideo = function (_BlockEmbed) {
       iframe.setAttribute('allowfullscreen', true);
       iframe.setAttribute('height', DEFAULT_ATTRIBUTES['height']);
       iframe.setAttribute('width', DEFAULT_ATTRIBUTES['width']);
-      iframe.setAttribute('src', ensureProtocol(extractVideoUrl(value)));
+      iframe.setAttribute('src', _link_parser.LinkParser.ensureProtocol(extractVideoUrl(value)));
       node.appendChild(iframe);
       return node;
     }
@@ -11525,10 +11527,6 @@ PromoteVideo.blotName = 'video';
 PromoteVideo.className = 'ql-video';
 PromoteVideo.tagName = 'DIV';
 
-function ensureProtocol(url) {
-  return url.indexOf('://') === -1 ? 'https://' + url : url;
-}
-
 // TODO: remove if/when upstream releases new version: https://github.com/quilljs/quill/pull/1517
 function extractVideoUrl(url) {
   var match = url.match(/^(?:(https?):\/\/)?(?:(?:www|m)\.)?youtube\.com\/watch.*v=([a-zA-Z0-9_-]+)/) || url.match(/^(?:(https?):\/\/)?(?:(?:www|m)\.)?youtu\.be\/([a-zA-Z0-9_-]+)/);
@@ -11547,6 +11545,44 @@ exports.PromoteVideo = PromoteVideo;
 
 /***/ }),
 /* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var LinkParser = function () {
+  function LinkParser() {
+    _classCallCheck(this, LinkParser);
+  }
+
+  _createClass(LinkParser, null, [{
+    key: 'ensureProtocol',
+    value: function ensureProtocol(url) {
+      // Add https as default if protocol is missing
+      if (url.indexOf('://') === -1) {
+        url = 'https://' + url;
+      }
+      // Get rid of extra backslases
+      url = url.replace(/^([^:]*):*\/*/, '$1://');
+      return url;
+    }
+  }]);
+
+  return LinkParser;
+}();
+
+exports.LinkParser = LinkParser;
+
+/***/ }),
+/* 3 */
 /***/ (function(module, exports) {
 
 /*
@@ -11602,12 +11638,12 @@ module.exports = function() {
 
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var pSlice = Array.prototype.slice;
-var objectKeys = __webpack_require__(15);
-var isArguments = __webpack_require__(14);
+var objectKeys = __webpack_require__(16);
+var isArguments = __webpack_require__(15);
 
 var deepEqual = module.exports = function (actual, expected, opts) {
   if (!opts) opts = {};
@@ -11702,7 +11738,7 @@ function objEquiv(a, b, opts) {
 
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11795,7 +11831,7 @@ module.exports = function extend() {
 
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports) {
 
 /*
@@ -12047,7 +12083,7 @@ function updateLink(linkElement, obj) {
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12062,30 +12098,30 @@ var _quill = __webpack_require__(0);
 
 var _quill2 = _interopRequireDefault(_quill);
 
-var _hr = __webpack_require__(7);
+var _hr = __webpack_require__(8);
 
 var _hr2 = _interopRequireDefault(_hr);
 
 var _promote_video = __webpack_require__(1);
 
-var _promote_link = __webpack_require__(8);
+var _promote_link = __webpack_require__(9);
 
-var _utils = __webpack_require__(9);
+var _utils = __webpack_require__(10);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // Add custom icons
 var icons = _quill2.default.import('ui/icons');
 icons['divider'] = '&minus;'; // TODO: Update to fa minus?
-icons['showcode'] = __webpack_require__(24);
-icons['undo'] = __webpack_require__(26);
-icons['redo'] = __webpack_require__(25);
+icons['showcode'] = __webpack_require__(25);
+icons['undo'] = __webpack_require__(27);
+icons['redo'] = __webpack_require__(26);
 
 // Add default quill css
-__webpack_require__(23);
+__webpack_require__(24);
 
 // Add custom promote editor css
-__webpack_require__(22);
+__webpack_require__(23);
 
 // Add custom hr tag and custom video settings
 _quill2.default.register({
@@ -12189,7 +12225,7 @@ function makeEditor(textarea) {
 window.makeEditor = makeEditor;
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12231,7 +12267,7 @@ Hr.tagName = 'hr';
 exports.default = Hr;
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12249,6 +12285,8 @@ var _get = function get(object, property, receiver) { if (object === null) objec
 var _quill = __webpack_require__(0);
 
 var _quill2 = _interopRequireDefault(_quill);
+
+var _link_parser = __webpack_require__(2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -12273,7 +12311,7 @@ var PromoteLink = function (_Link) {
     key: 'create',
     value: function create(value) {
       var node = _get(PromoteLink.__proto__ || Object.getPrototypeOf(PromoteLink), 'create', this).call(this, value);
-      node.setAttribute('href', ensureProtocol(node.getAttribute('href')));
+      node.setAttribute('href', _link_parser.LinkParser.ensureProtocol(node.getAttribute('href')));
       return node;
     }
   }]);
@@ -12281,14 +12319,10 @@ var PromoteLink = function (_Link) {
   return PromoteLink;
 }(Link);
 
-function ensureProtocol(url) {
-  return url.indexOf('://') === -1 ? 'https://' + url : url;
-}
-
 exports.PromoteLink = PromoteLink;
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12308,11 +12342,11 @@ var _quill = __webpack_require__(0);
 
 var _quill2 = _interopRequireDefault(_quill);
 
-var _parchment = __webpack_require__(19);
+var _parchment = __webpack_require__(20);
 
 var _parchment2 = _interopRequireDefault(_parchment);
 
-var _quillDelta = __webpack_require__(20);
+var _quillDelta = __webpack_require__(21);
 
 var _quillDelta2 = _interopRequireDefault(_quillDelta);
 
@@ -12620,7 +12654,7 @@ function addFormatsAndHandlers(options, editorTools) {
 }
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12741,7 +12775,7 @@ function fromByteArray (uint8) {
 
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12755,9 +12789,9 @@ function fromByteArray (uint8) {
 
 
 
-var base64 = __webpack_require__(10)
-var ieee754 = __webpack_require__(17)
-var isArray = __webpack_require__(18)
+var base64 = __webpack_require__(11)
+var ieee754 = __webpack_require__(18)
+var isArray = __webpack_require__(19)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -14535,13 +14569,13 @@ function isnan (val) {
   return val !== val // eslint-disable-line no-self-compare
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(27)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(28)))
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(2)();
+exports = module.exports = __webpack_require__(3)();
 // imports
 
 
@@ -14552,10 +14586,10 @@ exports.push([module.i, ".ql-snow .ql-picker.ql-header {\n    border: 1px solid 
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(2)();
+exports = module.exports = __webpack_require__(3)();
 // imports
 
 
@@ -14566,7 +14600,7 @@ exports.push([module.i, "/*!\n * Quill Editor v1.3.4\n * https://quilljs.com/\n 
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports) {
 
 var supportsArgumentsClass = (function(){
@@ -14592,7 +14626,7 @@ function unsupported(object){
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports) {
 
 exports = module.exports = typeof Object.keys === 'function'
@@ -14607,7 +14641,7 @@ function shim (obj) {
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports) {
 
 /**
@@ -15351,7 +15385,7 @@ function merge_tuples (diffs, start, length) {
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -15441,7 +15475,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -15452,7 +15486,7 @@ module.exports = Array.isArray || function (arr) {
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -17154,13 +17188,13 @@ exports.default = TextBlot;
 //# sourceMappingURL=parchment.js.map
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var diff = __webpack_require__(16);
-var equal = __webpack_require__(3);
-var extend = __webpack_require__(4);
-var op = __webpack_require__(21);
+var diff = __webpack_require__(17);
+var equal = __webpack_require__(4);
+var extend = __webpack_require__(5);
+var op = __webpack_require__(22);
 
 
 var NULL_CHARACTER = String.fromCharCode(0);  // Placeholder char for embed in diff()
@@ -17485,11 +17519,11 @@ module.exports = Delta;
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var equal = __webpack_require__(3);
-var extend = __webpack_require__(4);
+var equal = __webpack_require__(4);
+var extend = __webpack_require__(5);
 
 
 var lib = {
@@ -17630,16 +17664,16 @@ module.exports = lib;
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(12);
+var content = __webpack_require__(13);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(5)(content, {});
+var update = __webpack_require__(6)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -17656,16 +17690,16 @@ if(false) {
 }
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(13);
+var content = __webpack_require__(14);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(5)(content, {});
+var update = __webpack_require__(6)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -17682,25 +17716,25 @@ if(false) {
 }
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports) {
 
 module.exports = "<svg viewbox=\"0 0 18 18\"><polyline class=\"ql-even ql-stroke\" points=\"5 7 3 9 5 11\"></polyline><polyline class=\"ql-even ql-stroke\" points=\"13 7 15 9 13 11\"></polyline><line class=\"ql-stroke\" x1=\"10\" x2=\"8\" y1=\"5\" y2=\"13\"></line></svg>"
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports) {
 
 module.exports = "<svg viewbox=\"0 0 18 18\"><polygon class=\"ql-fill ql-stroke\" points=\"12 10 14 12 16 10 12 10\"></polygon><path class=\"ql-stroke\" d=\"M9.91,13.91A4.6,4.6,0,0,1,9,14a5,5,0,1,1,5-5\"></path></svg>"
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports) {
 
 module.exports = "<svg viewbox=\"0 0 18 18\"><polygon class=\"ql-fill ql-stroke\" points=\"6 10 4 12 2 10 6 10\"></polygon><path class=\"ql-stroke\" d=\"M8.09,13.91A4.6,4.6,0,0,0,9,14,5,5,0,1,0,4,9\"></path></svg>"
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports) {
 
 var g;
@@ -17727,10 +17761,10 @@ module.exports = g;
 
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(6);
+module.exports = __webpack_require__(7);
 
 
 /***/ })
