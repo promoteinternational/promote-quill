@@ -173,7 +173,7 @@ describe('addFormatsAndHandlers', () => {
     addFormatsAndHandlers(options, editorTools);
 
     expect(options.formats).to.eql(
-      ['alt', 'height', 'width', 'image', 'indent']
+      ['alt', 'height', 'width', 'image', 'indent', 'error-msg']
     );
     expect(options.modules.toolbar.handlers).to.eql({})
   });
