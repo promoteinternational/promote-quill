@@ -60,3 +60,7 @@
 .ql-container.ql-snow .ql-tooltip[data-mode=video]::before {
   content: "Video:"
 }
+
+.ql-error-msg {
+  text-align: center;
+}
