@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "promote-editor",
-  "version": "0.6.14",
+  "version": "0.6.15",
   "description": "Editor based on Quilljs with Promote additions",
   "main": "lib/index.js",
   "scripts": {
