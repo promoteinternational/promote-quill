@@ -30,7 +30,6 @@ module.exports = {
   },
   plugins: [
     new webpack.BannerPlugin("(C) Copyright Promote International AB\nPromote editor version: " + PACKAGE.version),
-    new webpack.optimize.DedupePlugin()
   ],
   resolve: {
     modules: ["lib", "node_modules"]
