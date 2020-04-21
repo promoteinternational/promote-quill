@@ -8,7 +8,7 @@ module.exports = function (config) {
     plugins: [
       require('karma-mocha'),
       require('karma-chai'),
-      require('karma-phantomjs-launcher'),
+      require('karma-firefox-launcher'),
       require('karma-webpack'),
     ],
     files: [
@@ -29,7 +29,7 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['PhantomJS'],
+    browsers: ['FirefoxHeadless'],
     singleRun: true,
     webpack: {
 
