@@ -15,16 +15,34 @@ Rich content editor based on [Quilljs](https://quilljs.com/).
 
 ## Running tests
 
-``` bash
+```bash
 $ npm test
 ```
 
 ## Bundling
 
-To create a new version of `dist/promote-editor.js`,
-first bump version in `package.json`, then run:
+To create a new version of `dist/promote-editor.js`:
+First bump version in `package.json`,
+preferably edit this version directly on master and push it:
 
-``` bash
+```bash
+git checkout master
+git pull
+# edit package.json
+git add package.json
+git commit -v "Bump version"
+git push
+# use the correct version
+git tag -a v0.x.y
+git push --tags
+```
+
+Then either run this,
+or trigger the tag build on CI to generate the asset there.
+
+
+```bash
 $ npm run dist
 ```
 
+<https://ci.promoteapp.net/blue/organizations/jenkins/gems%2Fpromote-quill/branches>
