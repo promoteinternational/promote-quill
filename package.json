@@ -22,7 +22,7 @@
   "homepage": "https://github.com/promoteinternational/promote-quill#readme",
   "dependencies": {
     "parchment": "1.1.2",
-    "quill": "1.3.4",
+    "quill": "1.3.7",
     "quill-delta": "3.6.2"
   },
   "devDependencies": {
